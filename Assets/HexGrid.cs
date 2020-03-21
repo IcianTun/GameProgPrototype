@@ -11,10 +11,14 @@ public class HexGrid : MonoBehaviour {
     public HexCell cellPrefab;
     public Text cellLabelPrefab;
 
+    public Color defaultColor = Color.white;
+    public Color touchedColor = Color.magenta;
+
     HexCell[] cells;
 
     Canvas gridCanvas;
     HexMesh hexMesh;
+
 
     void Awake()
     {
@@ -57,7 +61,12 @@ public class HexGrid : MonoBehaviour {
     void TouchCell(Vector3 position)
     {
         position = transform.InverseTransformPoint(position);
-        Debug.Log("touched at " + position);
+        HexCoordinates coordinates = HexCoordinates.FromPosition(position);
+        int index = coordinates.X + coordinates.Z * width + coordinates.Z / 2;
+        HexCell cell = cells[index];
+        cell.color = touchedColor;
+        hexMesh.Triangulate(cells);
+        Debug.Log("touched at " + coordinates);
     }
 
     void CreateCell(int x, int z, int i)
@@ -71,7 +80,7 @@ public class HexGrid : MonoBehaviour {
         cell.transform.SetParent(transform, false);
         cell.transform.localPosition = position;
         cell.coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
-
+        cell.color = defaultColor;
 
         Text label = Instantiate<Text>(cellLabelPrefab);
         label.rectTransform.SetParent(gridCanvas.transform, false);
