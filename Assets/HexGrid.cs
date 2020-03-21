@@ -13,12 +13,13 @@ public class HexGrid : MonoBehaviour {
 
     HexCell[] cells;
 
-
     Canvas gridCanvas;
+    HexMesh hexMesh;
 
     void Awake()
     {
         gridCanvas = GetComponentInChildren<Canvas>();
+        hexMesh = GetComponentInChildren<HexMesh>();
         cells = new HexCell[height * width];
 
         for (int z = 0, i = 0; z < height; z++)
@@ -30,12 +31,41 @@ public class HexGrid : MonoBehaviour {
         }
     }
 
+    void Start()
+    {
+        hexMesh.Triangulate(cells);
+    }
+
+    void Update()
+    {
+        if (Input.GetMouseButton(0))
+        {
+            HandleInput();
+        }
+    }
+
+    void HandleInput()
+    {
+        Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(inputRay, out hit))
+        {
+            TouchCell(hit.point);
+        }
+    }
+
+    void TouchCell(Vector3 position)
+    {
+        position = transform.InverseTransformPoint(position);
+        Debug.Log("touched at " + position);
+    }
+
     void CreateCell(int x, int z, int i)
     {
         Vector3 position;
-        position.x = x * 10f;
+        position.x = (x + z * 0.5f - z / 2) * (HexMetrics.innerRadius * 2f);
         position.y = 0f;
-        position.z = z * 10f;
+        position.z = z * (HexMetrics.outerRadius * 1.5f);
 
         HexCell cell = cells[i] = Instantiate<HexCell>(cellPrefab);
         cell.transform.SetParent(transform, false);
