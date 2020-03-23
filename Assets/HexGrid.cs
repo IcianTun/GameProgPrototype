@@ -20,8 +20,7 @@ public class HexGrid : MonoBehaviour {
 
     Canvas gridCanvas;
     HexMesh hexMesh;
-
-
+    
     void Awake()
     {
         gridCanvas = GetComponentInChildren<Canvas>();
@@ -48,6 +47,7 @@ public class HexGrid : MonoBehaviour {
         {
             HandleInput();
         }
+
     }
 
     void HandleInput()
@@ -63,14 +63,19 @@ public class HexGrid : MonoBehaviour {
     void TouchCell(Vector3 position)
     {
         position = transform.InverseTransformPoint(position);
-        HexCoordinates coordinates = HexCoordinates.FromPosition(position);
-        int index = coordinates.X + coordinates.Z * width + coordinates.Z / 2;
-        HexCell cell = cells[index];
+        HexCoordinates coordinate = HexCoordinates.FromPosition(position);
+        HexCell cell = GetCell(coordinate.X, coordinate.Z);
         cell.color = touchedColor;
         hexMesh.Triangulate(cells);
-        Debug.Log("touched at " + coordinates);
+        Debug.Log("touched cell " + cell.coordinates);
         //Debug.Log(cell.coordinates == coordinates); TRUE
 
+    }
+
+    public HexCell GetCell(int xCoordinate, int zCoordinate)
+    {
+        int index = xCoordinate + zCoordinate * width + zCoordinate / 2;
+        return cells[index];
     }
 
     void CreateCell(int x, int z, int i)
