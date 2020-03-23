@@ -23,7 +23,8 @@ public class GameManagerScript : MonoBehaviour {
     public Text currentPlayerText;
     public Text phaseText;
     public Text UnitInfoText;
-    
+    public Text gain;
+
     public Phase phase;
 
     //public PlayerColor playerTurn;
@@ -56,9 +57,11 @@ public class GameManagerScript : MonoBehaviour {
         }
     }
 
-    private void Update()
+    private void Info(Unit unit)
     {
-        UnitInfoText.text = "asdfjsasjf";
+        UnitInfoText.text = "Owner : " + unit.getPlayer()+"\nType : "+unit.getType()+"\nHP : " 
+            + unit.getHP().ToString() + "\nATK : " + unit.getATK().ToString() + "\nRange : "+ 
+            unit.getRange().ToString()+"\nMove : "+ unit.getMoveRange().ToString();
     }
 
     void Start()
@@ -162,13 +165,15 @@ public class GameManagerScript : MonoBehaviour {
                 cell.unit.SetHexCell(cell);
                 unit.SetPlayer(currentPlayer);
                 currentPlayer.unitList.Add(unit);
+                Info(cell.unit);
             }
             //Debug.Log("touched cell " + cell.coordinates);
             //Debug.Log(cell.coordinates == coordinates); TRUE
         }
         if (phase == Phase.Move)
         {
-            if(cell.unit && cell.unit.player == currentPlayer )
+            Info(cell.unit);
+            if (cell.unit && cell.unit.player == currentPlayer )
             {
                 selectingUnitInBoard = cell.unit;
                 HexCell[] neighbors = cell.GetNeightbors();
