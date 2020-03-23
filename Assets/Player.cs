@@ -7,13 +7,16 @@ public enum PlayerColor
     Blue,
     Red
 }
+
 public class Player : MonoBehaviour {
 
     public PlayerColor playerColor;
 
     public List<Unit> unitList;
 
-    int production;
+    public int production = 8;
+
+    public Unit producingUnit;
 
     public PlayerColor getColor()
     {
@@ -25,9 +28,9 @@ public class Player : MonoBehaviour {
         unitList = new List<Unit>();
 		
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
+    public void UnitsAction(Phase phase)
+    {
+        
+    }
 }

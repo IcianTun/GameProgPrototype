@@ -11,31 +11,37 @@ public enum Phase
 }
 
 
-public class GameManagerScript : MonoBehaviour {
-    
+public class GameManagerScript : MonoBehaviour
+{
+
     private static GameManagerScript _instance;
     public static GameManagerScript Instance { get { return _instance; } }
 
+    [Header("Grid Things")]
     public HexGrid hexGrid;
     public Color rangeColor = Color.yellow;
 
-    public Button tankButton, lightButton, rangerButton, endStepButton;
+    [Header("UI Things")]
+    public Button tankButton;
+    public Button lightButton, rangerButton, endStepButton, nextPlayerButton;
     public Text currentPlayerText;
     public Text phaseText;
     public Text UnitInfoText;
     public Text gain;
+    public GameObject blackCover;
 
+    [Header("GameInfo")]
     public Phase phase;
-
-    //public PlayerColor playerTurn;
     public Player currentPlayer;
+    public int turnCount = 1;
 
-    int productionGain = 2;
-    int productionMax = 6;
+    static int productionGain = 2;   // gain start at 2
+    static int productionMax = 6;
 
+
+    [Header("Game Setup")]
     public Player bluePlayer;
     public Player redPlayer;
-
     public GameObject tankPrefab;
     public GameObject lightPrefab;
     public GameObject rangerPrefab;
@@ -69,6 +75,7 @@ public class GameManagerScript : MonoBehaviour {
             unit.getRange().ToString()+"\nMove : "+ unit.getMoveRange().ToString();
     }
 
+
     void Start()
     {
         phase = Phase.Deploy;
@@ -81,24 +88,27 @@ public class GameManagerScript : MonoBehaviour {
         lightButton.onClick.AddListener(() => SetDeployUnit(UnitType.Light));
         rangerButton.onClick.AddListener(() => SetDeployUnit(UnitType.Ranger));
         endStepButton.onClick.AddListener(() => EndStep());
+        nextPlayerButton.onClick.AddListener(() => DisableBlackScreen());
     }
     public bool IsHoldingUnit()
     {
         return isHoldingUnit;
     }
 
-    public GameObject GetSelectedUnitPrefab()
-    {
-        return selectedUnitPrefab;
-    }
-
     public void EndStep()
     {
-        if(currentPlayer.playerColor == PlayerColor.Blue)
+        blackCover.SetActive(true);
+    }
+
+    public void DisableBlackScreen()
+    {
+        if (currentPlayer.playerColor == PlayerColor.Blue) // blue is 2nd player
         {
+            MergeAction();
             SwitchPhase();
-        } 
+        }
         SwitchPlayerColor();
+        blackCover.SetActive(false);
     }
 
     void SwitchPhase()
@@ -119,6 +129,10 @@ public class GameManagerScript : MonoBehaviour {
                 tankButton.interactable = true;
                 lightButton.interactable = true;
                 rangerButton.interactable = true;
+                if(turnCount%2 == 1 && productionGain != productionMax)
+                {
+                    productionGain += 1;
+                }
                 break;
         }
         phaseText.text = phase.ToString();
@@ -142,7 +156,8 @@ public class GameManagerScript : MonoBehaviour {
 
     public void SetDeployUnit(UnitType unitType)
     {
-        if(phase == Phase.Deploy) { 
+        if (phase == Phase.Deploy)
+        {
             switch (unitType)
             {
                 case (UnitType.Tank):
@@ -163,53 +178,76 @@ public class GameManagerScript : MonoBehaviour {
     {
         if (phase == Phase.Deploy)
         {
-            if (IsHoldingUnit() && (cell.unit == null))
+            if (IsHoldingUnit() && (cell.unit == null) && currentPlayer.production >= selectedUnitPrefab.GetComponent<Unit>().productionCost)
             {
-                GameObject newUnit = Instantiate(GetSelectedUnitPrefab());
+                GameObject newUnit = Instantiate(selectedUnitPrefab);
                 Unit unit = cell.unit = newUnit.GetComponent<Unit>();
-                cell.unit.SetHexCell(cell);
-                unit.SetPlayer(currentPlayer);
+                unit.SetHexCell(cell);
+                unit.SetPlayer(currentPlayer);  // TODO add to choosenCoordinate when 
                 currentPlayer.unitList.Add(unit);
                 Info(cell.unit);
+                currentPlayer.production -= unit.productionCost;
             }
-            //Debug.Log("touched cell " + cell.coordinates);
-            //Debug.Log(cell.coordinates == coordinates); TRUE
+            if (IsHoldingUnit() && cell.unit == null)
+            {
+                Info(cell.unit);
+            }
         }
         if (phase == Phase.Move)
         {
             Info(cell.unit);
             if (cell.unit && cell.unit.player == currentPlayer )
+            HandleMovePhase(cell);
+        }
+        if (phase == Phase.Action)
+        {
+            HandleActionPhase(cell);
+        }
+    }
+
+    public void HandleMovePhase(HexCell cell)
+    {
+        if (cell.unit && cell.unit.player == currentPlayer && selectingUnitInBoard != cell.unit && cell.unit.choosenTargetCell == null)
+        {
+            selectingUnitInBoard = cell.unit;
+            HexCell[] neighbors = cell.GetNeightbors();
+            List<HexCell> neightborsList = new List<HexCell>(neighbors);
+            int range = 1;
+            while (range <= cell.unit.range)
             {
-                selectingUnitInBoard = cell.unit;
-                HexCell[] neighbors = cell.GetNeightbors();
-                List<HexCell> neightborsList = new List<HexCell>(neighbors);
-                int range = 1;
-                while (range <= cell.unit.range)
+                List<HexCell> newList = new List<HexCell>();
+                foreach (HexCell neighbor in neightborsList)
                 {
-                    Debug.Log(range);
-                    List<HexCell> newList = new List<HexCell>();
-                    foreach (HexCell neighbor in neightborsList)
+                    if (neighbor)
                     {
                         newList.AddRange(neighbor.GetNeightbors());
                         neighbor.color = rangeColor;
                         hexGrid.RenderCell();
                     }
-                    neightborsList = newList;
-                    range++;
                 }
-
+                neightborsList = newList;
+                range++;
             }
-            if (selectingUnitInBoard)
+        }
+        if (selectingUnitInBoard)
+        {
+            int distance = selectingUnitInBoard.hexCell.coordinates - cell.coordinates;
+            if (distance > 0 && distance <= selectingUnitInBoard.moveRange)
             {
-                int distance = selectingUnitInBoard.hexCell.coordinates - cell.coordinates;
-                if ( distance > 0 && distance <= selectingUnitInBoard.moveRange)
-                {
-                    selectingUnitInBoard.choosenTargetCell = cell;
-                    hexGrid.ResetCorlor();
-                    hexGrid.RenderCell();
-                }
+                selectingUnitInBoard.choosenTargetCell = cell;
+                hexGrid.ResetColor();
             }
         }
     }
 
+    void MergeAction()
+    {
+        bluePlayer.UnitsAction(phase);
+        redPlayer.UnitsAction(phase);
+    }
+
+    public void HandleActionPhase(HexCell cell)
+    {
+
+    }
 }
