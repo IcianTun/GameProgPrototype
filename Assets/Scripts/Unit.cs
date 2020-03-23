@@ -12,7 +12,6 @@ public enum UnitType
 public class Unit : MonoBehaviour {
 
     public HexCell hexCell;
-
     public UnitType unitType;
     
     public int hp;
@@ -39,9 +38,10 @@ public class Unit : MonoBehaviour {
         }
     }
 
-    public void setHexCell(HexCell newHexCell)
+    public void SetHexCell(HexCell newHexCell)
     {
         hexCell = newHexCell;
-        transform.position = newHexCell.transform.position;
+        transform.position = newHexCell.transform.position + new Vector3(0,0.1f,0);;
+
     }
 }

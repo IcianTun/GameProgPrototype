@@ -65,12 +65,11 @@ public class HexGrid : MonoBehaviour {
         position = transform.InverseTransformPoint(position);
         HexCoordinates coordinate = HexCoordinates.FromPosition(position);
         HexCell cell = GetCell(coordinate.X, coordinate.Z);
-        cell.color = touchedColor;
-        hexMesh.Triangulate(cells);
-        Debug.Log("touched cell " + cell.coordinates);
-        //Debug.Log(cell.coordinates == coordinates); TRUE
-
+        //cell.color = touchedColor;
+        //hexMesh.Triangulate(cells);
+        GameManagerScript.Instance.HandleOnClickCell(cell);
     }
+    
 
     public HexCell GetCell(int xCoordinate, int zCoordinate)
     {
