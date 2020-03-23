@@ -11,7 +11,7 @@ public enum UnitType
 
 public class Unit : MonoBehaviour {
 
-    private int x, y;
+    public HexCell hexCell;
 
     public UnitType unitType;
     
@@ -33,5 +33,15 @@ public class Unit : MonoBehaviour {
         }
            
         hp -= damage;
+        if (hp < 0)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    public void setHexCell(HexCell newHexCell)
+    {
+        hexCell = newHexCell;
+        transform.position = newHexCell.transform.position;
     }
 }

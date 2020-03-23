@@ -80,6 +80,7 @@ public struct HexCoordinates
     {
         return X.ToString() + "\n" + Y.ToString() + "\n" + Z.ToString();
     }
+
     public static bool operator ==(HexCoordinates A, HexCoordinates B)
     {
         return A.X == B.X && A.Z == B.Z;

@@ -4,7 +4,9 @@ using UnityEngine;
 
 public enum Phase
 {
-    Deploy
+    Deploy,
+    Move,
+    Action
 }
 
 public class GameManagerScript : MonoBehaviour {
@@ -13,9 +15,19 @@ public class GameManagerScript : MonoBehaviour {
 
     public static GameManagerScript Instance { get { return _instance; } }
 
+    private void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
+    }
 
-
-	void NextTurn()
+    void NextTurn()
     {
 
     }
