@@ -15,8 +15,8 @@ public class HexGrid : MonoBehaviour {
     public Color touchedColor = Color.magenta;
     public Color blueColor = Color.blue;
     public Color redColor = Color.red;
-    Color greyColor1 = Color.grey;
-    Color greyColor2 = new Color(0.768f, 0.768f, 0.768f);
+    Color greyColor = Color.grey;
+    Color objColor = Color.green;
 
     HexCell[] cells;
 
@@ -114,7 +114,7 @@ public class HexGrid : MonoBehaviour {
 
         if (z % 2 == 1)
         {
-            cell.color = greyColor1;
+            cell.color = greyColor;
         }
 
         if (z < 2)
@@ -125,6 +125,21 @@ public class HexGrid : MonoBehaviour {
         if (z > (height - 3))
         {
             cell.color = redColor;
+        }
+
+        if (z == 6)
+        {
+            if (x >= 3 & x <= 5)
+            {
+                cell.color = objColor;
+            }
+        }
+        if (z == 5 | z == 7)
+        {
+            if (x >= 3 & x <= 4)
+            {
+                cell.color = objColor;
+            }
         }
 
 
