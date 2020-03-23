@@ -115,6 +115,16 @@ public class HexGrid : MonoBehaviour {
             }
         }
 
+        if (z < 2)
+        {
+            cell.color = blueColor;
+        }
+
+        if (z > (height - 3))
+        {
+            cell.color = redColor;
+        }
+
 
         Text label = Instantiate<Text>(cellLabelPrefab);
         label.rectTransform.SetParent(gridCanvas.transform, false);
