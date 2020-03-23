@@ -13,7 +13,7 @@ public class Player : MonoBehaviour {
 
     public List<Unit> unitList;
 
-    int production;
+    public int production = 8;
 
 	// Use this for initialization
 	void Start () {
