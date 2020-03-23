@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +15,8 @@ public class HexGrid : MonoBehaviour {
     public Color touchedColor = Color.magenta;
     public Color blueColor = Color.blue;
     public Color redColor = Color.red;
+    Color greyColor = Color.grey;
+    Color objColor = Color.green;
 
     HexCell[] cells;
 
@@ -29,7 +31,10 @@ public class HexGrid : MonoBehaviour {
 
         for (int z = 0, i = 0; z < height; z++)
         {
-            for (int x = 0; x < width; x++)
+            int w;
+            if (z % 2 == 1) w = width - 1;
+            else w = width;
+            for (int x = 0; x < w; x++)
             {
                 CreateCell(x, z, i++);
             }
@@ -114,6 +119,11 @@ public class HexGrid : MonoBehaviour {
             }
         }
 
+        if (z % 2 == 1)
+        {
+            cell.color = greyColor;
+        }
+
         if (z < 2)
         {
             cell.color = blueColor;
@@ -122,6 +132,21 @@ public class HexGrid : MonoBehaviour {
         if (z > (height - 3))
         {
             cell.color = redColor;
+        }
+
+        if (z == 6)
+        {
+            if (x >= 3 & x <= 5)
+            {
+                cell.color = objColor;
+            }
+        }
+        if (z == 5 | z == 7)
+        {
+            if (x >= 3 & x <= 4)
+            {
+                cell.color = objColor;
+            }
         }
 
 
