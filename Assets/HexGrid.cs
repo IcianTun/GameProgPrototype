@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HexGrid : MonoBehaviour {
+public class HexGrid : MonoBehaviour
+{
 
     public int width = 6;
     public int height = 6;
@@ -22,21 +23,35 @@ public class HexGrid : MonoBehaviour {
 
     Canvas gridCanvas;
     HexMesh hexMesh;
-    
+
+    public int index;
+    public HexCell cellAtIndex;
+
     void Awake()
     {
         gridCanvas = GetComponentInChildren<Canvas>();
         hexMesh = GetComponentInChildren<HexMesh>();
         cells = new HexCell[height * width];
 
-        for (int z = 0, i = 0; z < height; z++)
+        //for (int z = 0, i = 0; z < height; z++)
+        //{
+        //    for (int x = 0; x < width; x++)
+        //    {
+        //        CreateCell(x, z, i++);
+        //    }
+        //}
+
+
+        for (int z = 0; z < height; z++)
         {
             int w;
             if (z % 2 == 1) w = width - 1;
             else w = width;
             for (int x = 0; x < w; x++)
             {
-                CreateCell(x, z, i++);
+                int i = z * width + x;
+                Debug.Log("X: " + x + "  Z: " + z + " i:" + i);
+                CreateCell(x, z, z * width + x);
             }
         }
     }
@@ -52,7 +67,7 @@ public class HexGrid : MonoBehaviour {
         {
             HandleInput();
         }
-
+        cellAtIndex = cells[index];
     }
 
     void HandleInput()
@@ -74,7 +89,7 @@ public class HexGrid : MonoBehaviour {
         //hexMesh.Triangulate(cells);
         GameManagerScript.Instance.HandleOnClickCell(cell);
     }
-    
+
 
     public HexCell GetCell(int xCoordinate, int zCoordinate)
     {
@@ -95,29 +110,29 @@ public class HexGrid : MonoBehaviour {
         cell.coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
         cell.color = defaultColor;
 
-        if (x > 0)
-        {
-            cell.SetNeighbor(HexDirection.W, cells[i - 1]);
-        }
-        if (z > 0)
-        {
-            if ((z & 1) == 0)
-            {
-                cell.SetNeighbor(HexDirection.SE, cells[i - width]);
-                if (x > 0)
-                {
-                    cell.SetNeighbor(HexDirection.SW, cells[i - width - 1]);
-                }
-            }
-            else
-            {
-                cell.SetNeighbor(HexDirection.SW, cells[i - width]);
-                if (x < width - 1)
-                {
-                    cell.SetNeighbor(HexDirection.SE, cells[i - width + 1]);
-                }
-            }
-        }
+        //if (x > 0)
+        //{
+        //    cell.SetNeighbor(HexDirection.W, cells[i - 1]);
+        //}
+        //if (z > 0)
+        //{
+        //    if ((z & 1) == 0)
+        //    {
+        //        cell.SetNeighbor(HexDirection.SE, cells[i - width]);
+        //        if (x > 0)
+        //        {
+        //            cell.SetNeighbor(HexDirection.SW, cells[i - width - 1]);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        cell.SetNeighbor(HexDirection.SW, cells[i - width]);
+        //        if (x < width - 1)
+        //        {
+        //            cell.SetNeighbor(HexDirection.SE, cells[i - width + 1]);
+        //        }
+        //    }
+        //}
 
         if (z % 2 == 1)
         {
