@@ -39,7 +39,8 @@ public struct HexCoordinates
 
     public static HexCoordinates FromOffsetCoordinates(int x, int z)
     {
-        return new HexCoordinates(x - z / 2, z);
+        return new HexCoordinates(x, z);
+        //return new HexCoordinates(x - z / 2, z);
     }
 
     public static HexCoordinates FromPosition(Vector3 position)
@@ -78,7 +79,7 @@ public struct HexCoordinates
 
     public string ToStringOnSeparateLines()
     {
-        return X.ToString() + "\n" + Y.ToString() + "\n" + Z.ToString();
+        return X.ToString() + "\n" + Z.ToString();
     }
 
     public static bool operator ==(HexCoordinates A, HexCoordinates B)
