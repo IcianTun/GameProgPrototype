@@ -15,6 +15,8 @@ public class HexGrid : MonoBehaviour {
     public Color touchedColor = Color.magenta;
     public Color blueColor = Color.blue;
     public Color redColor = Color.red;
+    Color greyColor1 = Color.grey;
+    Color greyColor2 = new Color(0.768f, 0.768f, 0.768f);
 
     HexCell[] cells;
 
@@ -108,6 +110,11 @@ public class HexGrid : MonoBehaviour {
                     cell.SetNeighbor(HexDirection.SE, cells[i - width + 1]);
                 }
             }
+        }
+
+        if (z % 2 == 1)
+        {
+            cell.color = greyColor1;
         }
 
         if (z < 2)
