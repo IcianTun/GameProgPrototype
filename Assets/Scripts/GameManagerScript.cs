@@ -164,13 +164,14 @@ public class GameManagerScript : MonoBehaviour
     {
         if (phase == Phase.Deploy)
         {
-            if (IsHoldingUnit() && (cell.unit == null))
+            if (IsHoldingUnit() && (cell.unit == null) && currentPlayer.production >= selectedUnitPrefab.GetComponent<Unit>().productionCost)
             {
                 GameObject newUnit = Instantiate(selectedUnitPrefab);
                 Unit unit = cell.unit = newUnit.GetComponent<Unit>();
                 unit.SetHexCell(cell);
                 unit.SetPlayer(currentPlayer);  // TODO add to choosenCoordinate when 
                 currentPlayer.unitList.Add(unit);
+                currentPlayer.production -= unit.productionCost;
             }
         }
         if (phase == Phase.Move)

@@ -834,12 +834,14 @@ MonoBehaviour:
   lightButton: {fileID: 2050501948}
   rangerButton: {fileID: 691490667}
   endStepButton: {fileID: 157199271}
-  nextPlayerButton: {fileID: 0}
+  nextPlayerButton: {fileID: 1713338175}
   currentPlayerText: {fileID: 834389975}
   phaseText: {fileID: 1031636906}
-  UnitInfoText: {fileID: 1685235240}
+  unitInfoText: {fileID: 0}
+  blackCover: {fileID: 1573342158}
   phase: 0
   currentPlayer: {fileID: 0}
+  turnCount: 1
   bluePlayer: {fileID: 1971140501}
   redPlayer: {fileID: 1168422920}
   tankPrefab: {fileID: 1299812460449122, guid: 698f584566233384d884e4cb0f7c599a, type: 2}
@@ -1099,6 +1101,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerColor: 1
   unitList: []
+  production: 8
+  producingUnit: {fileID: 0}
 --- !u!4 &1168422921
 Transform:
   m_ObjectHideFlags: 0
@@ -1410,7 +1414,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1573342159
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1800,8 +1804,8 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.740566, g: 1, b: 0.9966292, a: 1}
-    m_PressedColor: {r: 0.08962262, g: 0.3712214, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.6415094, g: 0.6415094, b: 0.6415094, a: 1}
+    m_PressedColor: {r: 0.3490566, g: 0.3490566, b: 0.3490566, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -1968,6 +1972,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerColor: 0
   unitList: []
+  production: 8
+  producingUnit: {fileID: 0}
 --- !u!4 &1971140502
 Transform:
   m_ObjectHideFlags: 0

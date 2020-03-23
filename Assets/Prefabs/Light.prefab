@@ -53,13 +53,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hexCell: {fileID: 0}
-  unitType: 0
+  unitType: 1
   player: {fileID: 0}
-  hp: 0
-  productionCost: 0
-  atk: 0
-  range: 3
-  moveRange: 0
+  hp: 4
+  productionCost: 2
+  atk: 2
+  range: 1
+  moveRange: 2
   choosenTargetCell: {fileID: 0}
   isUpgraded: 0
 --- !u!212 &212675651406543302
