@@ -53,12 +53,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hexCell: {fileID: 0}
-  unitType: 0
-  hp: 0
-  productionCost: 0
-  atk: 0
-  range: 0
-  moveRange: 0
+  unitType: 2
+  player: {fileID: 0}
+  hp: 4
+  productionCost: 3
+  atk: 2
+  range: 2
+  moveRange: 1
+  choosenTargetCell: {fileID: 0}
   isUpgraded: 0
 --- !u!212 &212819800035787486
 SpriteRenderer:

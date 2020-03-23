@@ -97,13 +97,14 @@ public class HexGrid : MonoBehaviour
     {
         hexMesh.Triangulate(cells);
     }
-    public void ResetCorlor()
+    public void ResetColor()
     {
         foreach (HexCell cell in cells)
         {
             if (cell)
                 cell.color = cell.defaultColor;
         }
+        RenderCell();
     }
 
     public HexCell GetCell(int xCoordinate, int zCoordinate)
