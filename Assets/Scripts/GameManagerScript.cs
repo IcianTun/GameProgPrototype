@@ -220,7 +220,8 @@ public class GameManagerScript : MonoBehaviour
 
     void MergeAction()
     {
-        bluePlayer.UnitsAction();
+        bluePlayer.UnitsAction(phase);
+        redPlayer.UnitsAction(phase);
     }
 
     public void HandleActionPhase(HexCell cell)

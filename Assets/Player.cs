@@ -16,14 +16,16 @@ public class Player : MonoBehaviour {
 
     public int production = 8;
 
+    public Unit producingUnit;
+
 	// Use this for initialization
 	void Start () {
         unitList = new List<Unit>();
 		
 	}
 
-    public void UnitsAction()
+    public void UnitsAction(Phase phase)
     {
-
+        
     }
 }
