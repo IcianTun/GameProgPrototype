@@ -25,7 +25,12 @@ public class HexCell : MonoBehaviour {
     public Color color;
     public Color defaultColor;
 
-    public Unit unit;
+    public List<Unit> unitList;
+
+    void Start()
+    {
+        unitList = new List<Unit>();
+    }
 
     public HexCell GetNeighbor(HexDirection direction)
     {
