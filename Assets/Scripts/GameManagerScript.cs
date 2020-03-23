@@ -57,6 +57,11 @@ public class GameManagerScript : MonoBehaviour {
         }
     }
 
+    private void Gain(Unit unit)
+    {
+        gain.text = "Production Rate = "; //TODO
+    }
+
     private void Info(Unit unit)
     {
         UnitInfoText.text = "Owner : " + unit.getPlayer()+"\nType : "+unit.getType()+"\nHP : " 
