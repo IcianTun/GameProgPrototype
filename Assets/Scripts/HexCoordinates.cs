@@ -90,5 +90,14 @@ public struct HexCoordinates
     {
         return !(A == B);
     }
-
+    public static int operator -(HexCoordinates A, HexCoordinates B)
+    {
+        int du = (A.X + A.Z/2 + A.Z % 2) - (B.X + B.Z % 2 + B.Z/2);
+        int dv = A.Z - B.Z;
+        if ( (du >= 0 && dv >= 0) || (du < 0 && dv < 0))
+        {
+            return Mathf.Max(Mathf.Abs(du), Mathf.Abs(dv));
+        }
+        return Mathf.Abs(du) + Mathf.Abs(dv);
+    }
 }
