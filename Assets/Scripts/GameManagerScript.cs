@@ -90,6 +90,7 @@ public class GameManagerScript : MonoBehaviour
     {
         if (currentPlayer.playerColor == PlayerColor.Blue) // blue is 2nd player
         {
+            MergeAction();
             SwitchPhase();
         }
         SwitchPlayerColor();
@@ -216,7 +217,14 @@ public class GameManagerScript : MonoBehaviour
             }
         }
     }
+
+    void MergeAction()
+    {
+        bluePlayer.UnitsAction();
+    }
+
     public void HandleActionPhase(HexCell cell)
     {
+
     }
 }
