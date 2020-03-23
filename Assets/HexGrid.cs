@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -32,7 +32,10 @@ public class HexGrid : MonoBehaviour {
 
         for (int z = 0, i = 0; z < height; z++)
         {
-            for (int x = 0; x < width; x++)
+            int w;
+            if (z % 2 == 1) w = width - 1;
+            else w = width;
+            for (int x = 0; x < w; x++)
             {
                 CreateCell(x, z, i++);
             }
