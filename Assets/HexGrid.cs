@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,12 +15,15 @@ public class HexGrid : MonoBehaviour {
     public Color touchedColor = Color.magenta;
     public Color blueColor = Color.blue;
     public Color redColor = Color.red;
+    Color greyColor = Color.grey;
+    Color objColor = Color.green;
 
     HexCell[] cells;
 
     Canvas gridCanvas;
     HexMesh hexMesh;
-    
+
+
     void Awake()
     {
         gridCanvas = GetComponentInChildren<Canvas>();
@@ -29,7 +32,10 @@ public class HexGrid : MonoBehaviour {
 
         for (int z = 0, i = 0; z < height; z++)
         {
-            for (int x = 0; x < width; x++)
+            int w;
+            if (z % 2 == 1) w = width - 1;
+            else w = width;
+            for (int x = 0; x < w; x++)
             {
                 CreateCell(x, z, i++);
             }
@@ -47,7 +53,6 @@ public class HexGrid : MonoBehaviour {
         {
             HandleInput();
         }
-
     }
 
     void HandleInput()
@@ -63,19 +68,14 @@ public class HexGrid : MonoBehaviour {
     void TouchCell(Vector3 position)
     {
         position = transform.InverseTransformPoint(position);
-        HexCoordinates coordinate = HexCoordinates.FromPosition(position);
-        HexCell cell = GetCell(coordinate.X, coordinate.Z);
+        HexCoordinates coordinates = HexCoordinates.FromPosition(position);
+        int index = coordinates.X + coordinates.Z * width + coordinates.Z / 2;
+        HexCell cell = cells[index];
         cell.color = touchedColor;
         hexMesh.Triangulate(cells);
-        Debug.Log("touched cell " + cell.coordinates);
+        Debug.Log("touched at " + coordinates);
         //Debug.Log(cell.coordinates == coordinates); TRUE
 
-    }
-
-    public HexCell GetCell(int xCoordinate, int zCoordinate)
-    {
-        int index = xCoordinate + zCoordinate * width + zCoordinate / 2;
-        return cells[index];
     }
 
     void CreateCell(int x, int z, int i)
@@ -115,6 +115,11 @@ public class HexGrid : MonoBehaviour {
             }
         }
 
+        if (z % 2 == 1)
+        {
+            cell.color = greyColor;
+        }
+
         if (z < 2)
         {
             cell.color = blueColor;
@@ -123,6 +128,21 @@ public class HexGrid : MonoBehaviour {
         if (z > (height - 3))
         {
             cell.color = redColor;
+        }
+
+        if (z == 6)
+        {
+            if (x >= 3 & x <= 5)
+            {
+                cell.color = objColor;
+            }
+        }
+        if (z == 5 | z == 7)
+        {
+            if (x >= 3 & x <= 4)
+            {
+                cell.color = objColor;
+            }
         }
 
 
