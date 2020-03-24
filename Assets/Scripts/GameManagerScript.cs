@@ -65,7 +65,7 @@ public class GameManagerScript : MonoBehaviour
 
     private void Gain(Unit unit)
     {
-        gain.text = "Production Rate = "; //TODO
+        gain.text = "Production Rate = " + productionGain; //TODO
     }
 
     private void Info(Unit unit)
