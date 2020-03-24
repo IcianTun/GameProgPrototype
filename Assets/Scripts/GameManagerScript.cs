@@ -117,7 +117,7 @@ public class GameManagerScript : MonoBehaviour
                 break;
         }
         ProductionText.text = "Production left: = " + currentPlayer.production + 
-            (currentPlayer.productionNeeded == 0 ? "("+currentPlayer.productionNeeded+")"  : ""); //TODO
+            (currentPlayer.productionNeeded == 0 ? "" : "("+currentPlayer.productionNeeded+")");
     }
 
     private void InfoText(List<Unit> unitList)
