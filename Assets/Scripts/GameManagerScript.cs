@@ -294,6 +294,15 @@ public class GameManagerScript : MonoBehaviour
         {
             victoryCount = 0;
         }
+        if(victoryCount == 3)
+        {
+            ShowGameWin();
+        }
+    }
+
+    void ShowGameWin()
+    {
+
     }
 
     public void SetDeployUnit(UnitType unitType)
