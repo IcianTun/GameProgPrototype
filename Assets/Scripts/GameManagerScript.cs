@@ -20,6 +20,7 @@ public class GameManagerScript : MonoBehaviour
     [Header("Grid Things")]
     public HexGrid hexGrid;
     public Color rangeColor = Color.yellow;
+    public Color enemyFoundColor = Color.magenta;
 
     [Header("UI Things")]
     public Button tankButton;
@@ -109,10 +110,13 @@ public class GameManagerScript : MonoBehaviour
     {
         if (currentPlayer.playerColor == PlayerColor.Red) // red is 2nd player
         {
+            SwitchPlayerColor();
             MergeAction();
             SwitchPhase();
+        } else
+        {
+            SwitchPlayerColor();
         }
-        SwitchPlayerColor();
         blackCover.SetActive(false);
     }
 
@@ -146,7 +150,7 @@ public class GameManagerScript : MonoBehaviour
         if (phase == Phase.Deploy)
         {
             HideDeployedUnit();
-            selectedUnitPrefab = null;
+
         }
         else
         {
@@ -165,7 +169,8 @@ public class GameManagerScript : MonoBehaviour
                 currentPlayer = bluePlayer;
                 break;
         }
-
+        selectedUnitPrefab = null;
+        selectingUnitInBoard = null;
     }
 
     void HandleEndTurn()
@@ -182,7 +187,8 @@ public class GameManagerScript : MonoBehaviour
             if(bluePlayer.production > bluePlayer.productionNeeded)
             {
                 bluePlayer.production -= bluePlayer.productionNeeded;
-                bluePlayer.unitList.Add(bluePlayer.producingUnit);
+                bluePlayer.producingUnit.MoveToHexCell(bluePlayer.producingUnit.choosenTargetCell);
+                //bluePlayer.unitList.Add(bluePlayer.producingUnit);
                 bluePlayer.producingUnit = null;
             }
         }
@@ -191,7 +197,8 @@ public class GameManagerScript : MonoBehaviour
             if (redPlayer.production > redPlayer.productionNeeded)
             {
                 redPlayer.production -= redPlayer.productionNeeded;
-                redPlayer.unitList.Add(redPlayer.producingUnit);
+                redPlayer.producingUnit.MoveToHexCell(redPlayer.producingUnit.choosenTargetCell);
+                //redPlayer.unitList.Add(redPlayer.producingUnit);
                 redPlayer.producingUnit = null;
             }
         }
@@ -300,8 +307,8 @@ public class GameManagerScript : MonoBehaviour
                 selectingUnitInBoard = u;
                 HexCell[] neighbors = clickedCell.GetNeightbors();
                 List<HexCell> neightborsList = new List<HexCell>(neighbors);
-                int range = 1;
-                while (range <= u.moveRange)
+                int r = 1;
+                while (r <= u.moveRange)
                 {
                     List<HexCell> newList = new List<HexCell>();
                     foreach (HexCell neighbor in neightborsList)
@@ -314,7 +321,7 @@ public class GameManagerScript : MonoBehaviour
                         }
                     }
                     neightborsList = newList;
-                    range++;
+                    r++;
                 }
             }
         }
@@ -363,43 +370,50 @@ public class GameManagerScript : MonoBehaviour
 
     public void HandleActionPhase(HexCell clickedCell)
     {
-        List<Unit> unitList = clickedCell.unitList;
-        foreach (Unit u in unitList)
-        {
-            if (u.player == currentPlayer && u.choosenTargetCell == null)
-            {
-                selectingUnitInBoard = u;
-                HexCell[] neighbors = clickedCell.GetNeightbors();
-                List<HexCell> neightborsList = new List<HexCell>(neighbors);
-                int range = 1;
-                while (range <= u.moveRange)
-                {
-                    List<HexCell> newList = new List<HexCell>();
-                    foreach (HexCell neighbor in neightborsList)
-                    {
-                        if (neighbor && CanMoveThere(neighbor))
-                        {
-                            newList.AddRange(neighbor.GetNeightbors());
-                            neighbor.color = rangeColor;
-                            hexGrid.RenderCell();
-                        }
-                    }
-                    neightborsList = newList;
-                    range++;
-                }
-            }
-        }
         if (selectingUnitInBoard)       // Mode select target
         {
-
             int distance = selectingUnitInBoard.hexCell.coordinates - clickedCell.coordinates;
-            if (distance > 0 && distance <= selectingUnitInBoard.range && CanMoveThere(clickedCell) && IsEnemyUnitThere(clickedCell))
+            if (distance <= selectingUnitInBoard.range && IsEnemyUnitThere(clickedCell))
             {
                 selectingUnitInBoard.choosenTargetCell = clickedCell;
                 hexGrid.ResetColor();
                 selectingUnitInBoard = null;
             }
         }
+        else
+        {
+            List<Unit> unitList = clickedCell.unitList;
+            foreach (Unit u in unitList)
+            {
+                if (u.player == currentPlayer && u.choosenTargetCell == null)
+                {
+                    selectingUnitInBoard = u;
+                    HexCell[] neighbors = clickedCell.GetNeightbors();
+                    if (IsEnemyUnitThere(clickedCell))
+                    {
+                        clickedCell.color = enemyFoundColor;
+                    }
+                    List<HexCell> neightborsList = new List<HexCell>(neighbors);
+                    int r = 1;
+                    while (r <= u.range)
+                    {
+                        List<HexCell> newList = new List<HexCell>();
+                        foreach (HexCell neighbor in neightborsList)
+                        {
+                            newList.AddRange(neighbor.GetNeightbors());
+                            if (IsEnemyUnitThere(neighbor))
+                            {
+                                neighbor.color = enemyFoundColor;
+                            }
+                        }
+                        neightborsList = newList;
+                        r++;
+                    }
+                    hexGrid.RenderCell();
+                }
+            }
+        }
+
 
     }
 
