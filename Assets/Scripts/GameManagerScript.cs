@@ -30,9 +30,10 @@ public class GameManagerScript : MonoBehaviour
     public Text phaseText;
     public Text UnitInfoText;
     public Text UnitInfoText2;
-    public Text gain;
+    public Text ProductionText;
     public GameObject blackCover;
     public Text victoryInfoText;
+    public Text TurnCountText;
 
     [Header("GameInfo")]
     public Phase phase;
@@ -56,7 +57,8 @@ public class GameManagerScript : MonoBehaviour
     public Unit selectingUnitInBoard;
 
     public List<Unit> producedUnit;
-    
+
+    int notHasUpgradeCellTurnCount = 1;
 
     private void Awake()
     {
@@ -83,12 +85,39 @@ public class GameManagerScript : MonoBehaviour
             }
 
         }
-        
+        if (currentWinningPlayer && victoryCount >0) { 
+            switch (currentWinningPlayer.playerColor)
+            {
+                case (PlayerColor.Blue):
+                    victoryInfoText.color = Color.blue;
+                    break;
+                case (PlayerColor.Red):
+                    victoryInfoText.color = Color.red;
+                    break;
+            }
+            victoryInfoText.text = "VictoryPoint: "+victoryCount+"/3";
+        }
+        else
+        {
+            victoryInfoText.text = "";
+        }
+        GainText();
+        TurnCountText.text = "Turn: " + turnCount;
     }
 
-    private void GainText(int cost)
+    private void GainText()
     {
-        gain.text = "Production Rate = " + cost.ToString(); //TODO
+        switch (currentPlayer.playerColor)
+        {
+            case (PlayerColor.Blue):
+                ProductionText.color = Color.blue;
+                break;
+            case (PlayerColor.Red):
+                ProductionText.color = Color.red;
+                break;
+        }
+        ProductionText.text = "Production left: = " + currentPlayer.production + 
+            (currentPlayer.productionNeeded == 0 ? "("+currentPlayer.productionNeeded+")"  : ""); //TODO
     }
 
     private void InfoText(List<Unit> unitList)
@@ -134,6 +163,7 @@ public class GameManagerScript : MonoBehaviour
     private void InfoClearText()
     {
         UnitInfoText.text = "";
+        UnitInfoText2.text = "";
     }
 
     void Start()
@@ -264,8 +294,40 @@ public class GameManagerScript : MonoBehaviour
                 redPlayer.producingUnit = null;
             }
         }
+        HandleUpgrade();
         HandleObjective();
         turnCount += 1;
+    }
+
+    void HandleUpgrade()
+    {
+        bool hasUpgradeCell = false;
+        foreach(HexCell upgradeCell in hexGrid.upgradeCells)
+        {
+            if (upgradeCell.isUpgradeCell)
+            {
+                hasUpgradeCell = true;
+            }
+            if(upgradeCell.isUpgradeCell && upgradeCell.unitList.Count == 1)
+            {
+                Unit unitInUpgradeCell = upgradeCell.unitList[0];
+                if (unitInUpgradeCell.upgradeTurnCount == 2)
+                {
+                    unitInUpgradeCell.Upgrade();
+                    upgradeCell.isUpgradeCell = false;
+                    hasUpgradeCell = false;
+                }
+            }
+        }
+        if (!hasUpgradeCell)
+        {
+            notHasUpgradeCellTurnCount += 1;
+            if (notHasUpgradeCellTurnCount == 2)
+            {
+                hexGrid.upgradeCells[Random.Range(0, hexGrid.upgradeCells.Count)].isUpgradeCell = true;
+                notHasUpgradeCellTurnCount = 0;
+            }
+        }
     }
 
     void HandleObjective()
@@ -307,6 +369,7 @@ public class GameManagerScript : MonoBehaviour
         if (!isThereBlueUnit && !isThereRedUnit)
         {
             victoryCount = 0;
+            currentWinningPlayer = null;
         }
         if(victoryCount == 3)
         {
@@ -356,7 +419,6 @@ public class GameManagerScript : MonoBehaviour
 
     void HandleDeployPhase(HexCell clickedCell)
     {
-        GainText(currentPlayer.production);
         if (IsDeployZone(clickedCell) && selectedUnitPrefab && (!AlreadyDeployThere(clickedCell)) && !(IsMyUnitThere(clickedCell) ))
         {
             if (currentPlayer.production >= selectedUnitPrefab.GetComponent<Unit>().productionCost)
@@ -369,7 +431,6 @@ public class GameManagerScript : MonoBehaviour
 
                 currentPlayer.unitList.Add(unit);
                 currentPlayer.production -= unit.productionCost;
-                GainText(currentPlayer.production);
                 producedUnit.Add(unit);
                 var unitlist = new List<Unit> { unit };
                 InfoText(unitlist);

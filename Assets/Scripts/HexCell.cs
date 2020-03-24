@@ -28,6 +28,7 @@ public class HexCell : MonoBehaviour {
     public List<Unit> unitList;
 
     public bool isObjectiveZone = false;
+    public bool isUpgradeCell = false;
 
     void Start()
     {
