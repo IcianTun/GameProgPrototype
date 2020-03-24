@@ -857,7 +857,7 @@ MonoBehaviour:
   tankPrefab: {fileID: 1138921074049470, guid: 7c3889010e1fff94bbb81e7014501251, type: 2}
   lightPrefab: {fileID: 1677385689067784, guid: 4eca272ad75e5a744b5485cee1186a3f,
     type: 2}
-  rangerPrefab: {fileID: 1138921074049470, guid: 7c3889010e1fff94bbb81e7014501251,
+  rangerPrefab: {fileID: 1620790494754042, guid: 12130e28544e274448d60c1d1c68ebaf,
     type: 2}
   selectingUnitInBoard: {fileID: 0}
   producedUnit: []

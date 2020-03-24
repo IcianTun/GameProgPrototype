@@ -428,7 +428,15 @@ public class GameManagerScript : MonoBehaviour
                 Unit unit = newUnitObj.GetComponent<Unit>();
                 unit.player = currentPlayer;
                 unit.choosenTargetCell = clickedCell;
-
+                switch (currentPlayer.playerColor)
+                {
+                    case (PlayerColor.Blue):
+                        unit.transform.Rotate(0.0f, 0.0f, 90.0f);
+                        break;
+                    case (PlayerColor.Red):
+                        unit.transform.Rotate(0.0f, 0.0f, -90.0f);
+                        break;
+                }
                 currentPlayer.unitList.Add(unit);
                 currentPlayer.production -= unit.productionCost;
                 producedUnit.Add(unit);
@@ -440,6 +448,16 @@ public class GameManagerScript : MonoBehaviour
                 Unit unit = newUnitObj.GetComponent<Unit>();
                 unit.player = currentPlayer;
                 unit.choosenTargetCell = clickedCell;
+
+                switch (currentPlayer.playerColor)
+                {
+                    case (PlayerColor.Blue):
+                        unit.transform.Rotate(0.0f, 0.0f, 90.0f);
+                        break;
+                    case (PlayerColor.Red):
+                        unit.transform.Rotate(0.0f, 0.0f, -90.0f);
+                        break;
+                }
 
                 currentPlayer.producingUnit = unit;     // Produce this unit next turn
                                                         // this unit not added to player.unitList and clickedCell.unitList
