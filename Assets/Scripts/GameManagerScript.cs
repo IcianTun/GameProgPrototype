@@ -26,7 +26,8 @@ public class GameManagerScript : MonoBehaviour
     public Button lightButton, rangerButton, endStepButton, nextPlayerButton;
     public Text currentPlayerText;
     public Text phaseText;
-    public Text unitInfoText;
+    public Text UnitInfoText;
+    public Text gain;
     public GameObject blackCover;
 
     [Header("GameInfo")]
@@ -60,6 +61,19 @@ public class GameManagerScript : MonoBehaviour
             _instance = this;
         }
     }
+
+    private void Gain(Unit unit)
+    {
+        gain.text = "Production Rate = " + productionGain; //TODO
+    }
+
+    private void Info(Unit unit)
+    {
+        UnitInfoText.text = "Owner : " + unit.getPlayer()+"\nType : "+unit.getType()+"\nHP : " 
+            + unit.getHP().ToString() + "\nATK : " + unit.getATK().ToString() + "\nRange : "+ 
+            unit.getRange().ToString()+"\nMove : "+ unit.getMoveRange().ToString();
+    }
+
 
     void Start()
     {
