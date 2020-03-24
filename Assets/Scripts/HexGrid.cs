@@ -108,6 +108,13 @@ public class HexGrid : MonoBehaviour
         RenderCell();
     }
 
+    public HexCell GetCell(Vector3 worldPosition)
+    {
+        Vector3 position = transform.InverseTransformPoint(worldPosition);
+        HexCoordinates coordinate = HexCoordinates.FromPosition(position);
+        return GetCell(coordinate.X, coordinate.Z);
+    }
+
     public HexCell GetCell(int xCoordinate, int zCoordinate)
     {
         int index = xCoordinate + zCoordinate * width + zCoordinate / 2;
@@ -194,6 +201,8 @@ public class HexGrid : MonoBehaviour
             {
                 cell.color = objColor;
                 cell.defaultColor = objColor;
+                objectiveCells.Add(cell);
+                cell.isObjectiveZone = true;
             }
         }
 
