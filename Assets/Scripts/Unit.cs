@@ -12,21 +12,31 @@ public enum UnitType
 public class Unit : MonoBehaviour {
 
     public HexCell hexCell;
-
     public UnitType unitType;
-    
-    public int hp;
+
+    public Player player;
+
+    public int maxHP;
+
     public int productionCost;
 
     public int atk;
     public int range;
     public int moveRange;
 
+    [Header("For show ")]
+    public int hp;
+    public HexCell choosenTargetCell;
     public bool isUpgraded = false;
 
-    public void takeDamage(int damage)
+    private void Start()
     {
-        if(unitType == UnitType.Tank)
+        hp = maxHP;
+    }
+
+    public void TakeDamage(int damage)
+    {
+        if(unitType == UnitType.Tank && isUpgraded)
         {
             damage -= 1;
             damage = Mathf.Max(damage, 0);
@@ -39,9 +49,18 @@ public class Unit : MonoBehaviour {
         }
     }
 
-    public void setHexCell(HexCell newHexCell)
+    public void MoveToHexCell(HexCell newHexCell)
     {
+        if (hexCell)
+        {
+            hexCell.unitList.Remove(this);
+        }
         hexCell = newHexCell;
-        transform.position = newHexCell.transform.position;
+        newHexCell.unitList.Add(this);
+        transform.position = newHexCell.transform.position + new Vector3(0,0.1f,0);
+
     }
+
+
+
 }

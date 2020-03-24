@@ -23,17 +23,38 @@ public class HexCell : MonoBehaviour {
 
     public HexCoordinates coordinates;
     public Color color;
+    public Color defaultColor;
 
-    public Unit unit;
+    public List<Unit> unitList;
+
+    public bool isObjectiveZone = false;
+
+    void Start()
+    {
+        unitList = new List<Unit>();
+    }
 
     public HexCell GetNeighbor(HexDirection direction)
     {
         return neighbors[(int)direction];
     }
+
+    public HexCell[] GetNeightbors()
+    {
+        return neighbors;
+    }
+
     public void SetNeighbor(HexDirection direction, HexCell cell)
     {
-        neighbors[(int) direction] = cell;
-        cell.neighbors[(int)direction.Opposite()] = this;
+        if (cell) { 
+            neighbors[(int) direction] = cell;
+            cell.neighbors[(int)direction.Opposite()] = this;
+        }
+    }
+
+    public void ResetUnitList()
+    {
+        unitList.Clear();
     }
 
 }

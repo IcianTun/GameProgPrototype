@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-public class HexGrid : MonoBehaviour {
+public class HexGrid : MonoBehaviour
+{
 
     public int width = 6;
     public int height = 6;
@@ -11,10 +13,9 @@ public class HexGrid : MonoBehaviour {
     public HexCell cellPrefab;
     public Text cellLabelPrefab;
 
-    public Color defaultColor = Color.white;
-    public Color touchedColor = Color.magenta;
-    public Color blueColor = Color.blue;
-    public Color redColor = Color.red;
+    Color whiteColor = Color.white;
+    Color blueColor = Color.blue;
+    Color redColor = Color.red;
     Color greyColor = Color.grey;
     Color objColor = Color.green;
 
@@ -23,21 +24,34 @@ public class HexGrid : MonoBehaviour {
     Canvas gridCanvas;
     HexMesh hexMesh;
 
+    public int index;
+    public HexCell cellAtIndex;
+
+    public List<HexCell> objectiveCells;
 
     void Awake()
     {
         gridCanvas = GetComponentInChildren<Canvas>();
         hexMesh = GetComponentInChildren<HexMesh>();
         cells = new HexCell[height * width];
+        objectiveCells = new List<HexCell>();
+        //for (int z = 0, i = 0; z < height; z++)
+        //{
+        //    for (int x = 0; x < width; x++)
+        //    {
+        //        CreateCell(x, z, i++);
+        //    }
+        //}
 
-        for (int z = 0, i = 0; z < height; z++)
+
+        for (int z = 0; z < height; z++)
         {
             int w;
             if (z % 2 == 1) w = width - 1;
             else w = width;
             for (int x = 0; x < w; x++)
             {
-                CreateCell(x, z, i++);
+                CreateCell(x, z, z * width + x);
             }
         }
     }
@@ -49,10 +63,17 @@ public class HexGrid : MonoBehaviour {
 
     void Update()
     {
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButtonDown(0))
         {
-            HandleInput();
+            if (!EventSystem.current.IsPointerOverGameObject()) { 
+                HandleInput();
+            }
+            else
+            {
+                //Debug.Log("mousedOver");
+            }
         }
+        cellAtIndex = cells[index];
     }
 
     void HandleInput()
@@ -68,14 +89,45 @@ public class HexGrid : MonoBehaviour {
     void TouchCell(Vector3 position)
     {
         position = transform.InverseTransformPoint(position);
-        HexCoordinates coordinates = HexCoordinates.FromPosition(position);
-        int index = coordinates.X + coordinates.Z * width + coordinates.Z / 2;
-        HexCell cell = cells[index];
-        cell.color = touchedColor;
-        hexMesh.Triangulate(cells);
-        Debug.Log("touched at " + coordinates);
-        //Debug.Log(cell.coordinates == coordinates); TRUE
+        HexCoordinates coordinate = HexCoordinates.FromPosition(position);
+        HexCell cell = GetCell(coordinate.X, coordinate.Z);
+        GameManagerScript.Instance.HandleOnClickCell(cell);
+    }
 
+    public void RenderCell()
+    {
+        hexMesh.Triangulate(cells);
+    }
+    public void ResetColor()
+    {
+        foreach (HexCell cell in cells)
+        {
+            if (cell)
+                cell.color = cell.defaultColor;
+        }
+        RenderCell();
+    }
+
+    public HexCell GetCell(Vector3 worldPosition)
+    {
+        Vector3 position = transform.InverseTransformPoint(worldPosition);
+        HexCoordinates coordinate = HexCoordinates.FromPosition(position);
+        return GetCell(coordinate.X, coordinate.Z);
+    }
+
+    public HexCell GetCell(int xCoordinate, int zCoordinate)
+    {
+        int index = xCoordinate + zCoordinate * width + zCoordinate / 2;
+        return cells[index];
+    }
+
+    public void ResetCellsUnitList()
+    {
+        foreach (HexCell cell in cells)
+        {
+            if (cell)
+                cell.ResetUnitList();
+        }
     }
 
     void CreateCell(int x, int z, int i)
@@ -89,8 +141,8 @@ public class HexGrid : MonoBehaviour {
         cell.transform.SetParent(transform, false);
         cell.transform.localPosition = position;
         cell.coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
-        cell.color = defaultColor;
-
+        cell.color = whiteColor;
+        cell.defaultColor = whiteColor;
         if (x > 0)
         {
             cell.SetNeighbor(HexDirection.W, cells[i - 1]);
@@ -118,16 +170,19 @@ public class HexGrid : MonoBehaviour {
         if (z % 2 == 1)
         {
             cell.color = greyColor;
+            cell.defaultColor = greyColor;
         }
 
         if (z < 2)
         {
             cell.color = blueColor;
+            cell.defaultColor = blueColor;
         }
 
         if (z > (height - 3))
         {
             cell.color = redColor;
+            cell.defaultColor = redColor;
         }
 
         if (z == 6)
@@ -135,6 +190,9 @@ public class HexGrid : MonoBehaviour {
             if (x >= 3 & x <= 5)
             {
                 cell.color = objColor;
+                cell.defaultColor = objColor;
+                objectiveCells.Add(cell);
+                cell.isObjectiveZone = true;
             }
         }
         if (z == 5 | z == 7)
@@ -142,6 +200,9 @@ public class HexGrid : MonoBehaviour {
             if (x >= 3 & x <= 4)
             {
                 cell.color = objColor;
+                cell.defaultColor = objColor;
+                objectiveCells.Add(cell);
+                cell.isObjectiveZone = true;
             }
         }
 
