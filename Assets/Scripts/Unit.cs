@@ -25,6 +25,7 @@ public class Unit : MonoBehaviour {
     public int moveRange;
 
     public int upgradeTurnCount = 0;
+    public int dodgeTurnCount = 0;
 
     [Header("For show")]
     public int hp;
@@ -42,6 +43,11 @@ public class Unit : MonoBehaviour {
         {
             damage -= 1;
             damage = Mathf.Max(damage, 0);
+        }
+        if(dodgeTurnCount >= 2)
+        {
+            damage = 0;
+            dodgeTurnCount = 0;
         }
            
         hp -= damage;
