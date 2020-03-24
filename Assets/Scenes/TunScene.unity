@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4366756, g: 0.48427194, b: 0.5645252, a: 1}
+  m_IndirectSpecularColor: {r: 0.4366757, g: 0.48427194, b: 0.5645252, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -592,7 +592,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 7c1dc980993103843b47ad64962d7044, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -854,10 +854,10 @@ MonoBehaviour:
   victoryCount: 0
   bluePlayer: {fileID: 1971140501}
   redPlayer: {fileID: 1168422920}
-  tankPrefab: {fileID: 1299812460449122, guid: 698f584566233384d884e4cb0f7c599a, type: 2}
-  lightPrefab: {fileID: 1982624468217576, guid: ebe75ce064eff2947820726c8e24f0f1,
+  tankPrefab: {fileID: 1138921074049470, guid: 7c3889010e1fff94bbb81e7014501251, type: 2}
+  lightPrefab: {fileID: 1677385689067784, guid: 4eca272ad75e5a744b5485cee1186a3f,
     type: 2}
-  rangerPrefab: {fileID: 1913352262964362, guid: df8ceaff0451510428b56c6e039aa9cd,
+  rangerPrefab: {fileID: 1138921074049470, guid: 7c3889010e1fff94bbb81e7014501251,
     type: 2}
   selectingUnitInBoard: {fileID: 0}
   producedUnit: []
@@ -1778,7 +1778,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300018, guid: 7c1dc980993103843b47ad64962d7044, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2458,7 +2458,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300028, guid: 7c1dc980993103843b47ad64962d7044, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
