@@ -83,11 +83,12 @@ public class GameManagerScript : MonoBehaviour
             }
 
         }
+        
     }
 
-    private void GainText()
+    private void GainText(int cost)
     {
-        gain.text = "Production Rate = " + productionGain; //TODO
+        gain.text = "Production Rate = " + cost.ToString(); //TODO
     }
 
     private void InfoText(List<Unit> unitList)
@@ -141,6 +142,7 @@ public class GameManagerScript : MonoBehaviour
         phaseText.text = phase.ToString();
         currentPlayerText.color = Color.blue;
         currentPlayerText.text = "CurrentPlayer: Blue";
+        
 
         //playerTurn = PlayerColor.Red;
         currentPlayer = bluePlayer;
@@ -354,6 +356,7 @@ public class GameManagerScript : MonoBehaviour
 
     void HandleDeployPhase(HexCell clickedCell)
     {
+        GainText(currentPlayer.production);
         if (IsDeployZone(clickedCell) && selectedUnitPrefab && (!AlreadyDeployThere(clickedCell)) && !(IsMyUnitThere(clickedCell) ))
         {
             if (currentPlayer.production >= selectedUnitPrefab.GetComponent<Unit>().productionCost)
@@ -366,6 +369,7 @@ public class GameManagerScript : MonoBehaviour
 
                 currentPlayer.unitList.Add(unit);
                 currentPlayer.production -= unit.productionCost;
+                GainText(currentPlayer.production);
                 producedUnit.Add(unit);
                 var unitlist = new List<Unit> { unit };
                 InfoText(unitlist);
