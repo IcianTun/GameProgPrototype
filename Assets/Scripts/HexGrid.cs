@@ -113,6 +113,15 @@ public class HexGrid : MonoBehaviour
         return cells[index];
     }
 
+    public void ResetCellsUnitList()
+    {
+        foreach (HexCell cell in cells)
+        {
+            if (cell)
+                cell.ResetUnitList();
+        }
+    }
+
     void CreateCell(int x, int z, int i)
     {
         Vector3 position;
