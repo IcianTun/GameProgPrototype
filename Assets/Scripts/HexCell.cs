@@ -50,4 +50,9 @@ public class HexCell : MonoBehaviour {
         }
     }
 
+    public void ResetUnitList()
+    {
+        unitList.Clear();
+    }
+
 }

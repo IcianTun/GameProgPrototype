@@ -16,16 +16,23 @@ public class Unit : MonoBehaviour {
 
     public Player player;
 
-    public int hp;
+    public int maxHP;
+
     public int productionCost;
 
     public int atk;
     public int range;
     public int moveRange;
 
+    [Header("For show ")]
+    public int hp;
     public HexCell choosenTargetCell;
-
     public bool isUpgraded = false;
+
+    private void Start()
+    {
+        hp = maxHP;
+    }
 
     public void TakeDamage(int damage)
     {
@@ -42,48 +49,17 @@ public class Unit : MonoBehaviour {
         }
     }
 
-    public void SetHexCell(HexCell newHexCell)
+    public void MoveToHexCell(HexCell newHexCell)
     {
+        if (hexCell)
+        {
+            hexCell.unitList.Remove(this);
+        }
         hexCell = newHexCell;
-        transform.position = newHexCell.transform.position + new Vector3(0,0.1f,0);;
+        newHexCell.unitList.Add(this);
+        transform.position = newHexCell.transform.position + new Vector3(0,0.1f,0);
 
     }
-
-    public int getHP()
-    {
-        return hp;
-    }
-
-    public int getATK()
-    {
-        return atk;
-    }
-
-    public int getRange()
-    {
-        return range;
-    }
-
-    public int getMoveRange()
-    {
-        return moveRange;
-    }
-
-    public PlayerColor getPlayer()
-    {
-        return player.getColor();
-    }
-
-    public UnitType getType()
-    {
-        return unitType;
-    }
-
-    public void SetPlayer(Player player)
-    {
-        this.player = player;
-    }
-
 
 
 

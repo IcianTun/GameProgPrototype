@@ -16,6 +16,8 @@ public class Player : MonoBehaviour {
 
     public int production = 8;
 
+    public int productionNeeded;        // for unit > cost
+
     public Unit producingUnit;
 
     public PlayerColor getColor()
@@ -35,7 +37,7 @@ public class Player : MonoBehaviour {
         {
             foreach (Unit u in unitList)
             {
-                u.SetHexCell(u.choosenTargetCell);
+                u.MoveToHexCell(u.choosenTargetCell);
                 u.choosenTargetCell = null;
             }
         }
@@ -43,7 +45,7 @@ public class Player : MonoBehaviour {
         {
             foreach(Unit u in unitList)
             {
-                u.SetHexCell(u.choosenTargetCell);
+                u.MoveToHexCell(u.choosenTargetCell);
                 u.choosenTargetCell = null;
             }
         }
@@ -51,7 +53,6 @@ public class Player : MonoBehaviour {
         {
             foreach (Unit myUnit in unitList)
             {
-
                 foreach (Unit unitInTargetCell in myUnit.choosenTargetCell.unitList) {
                     if(unitInTargetCell.player != this)
                     {
@@ -69,6 +70,7 @@ public class Player : MonoBehaviour {
         {
             if(u.hp <= 0)
             {
+                u.hexCell.unitList.Remove(u);
                 Destroy(u.gameObject);
             }
         }
