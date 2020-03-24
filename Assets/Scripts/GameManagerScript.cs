@@ -311,6 +311,7 @@ public class GameManagerScript : MonoBehaviour
             if(upgradeCell.isUpgradeCell && upgradeCell.unitList.Count == 1)
             {
                 Unit unitInUpgradeCell = upgradeCell.unitList[0];
+                unitInUpgradeCell.upgradeTurnCount++;
                 if (unitInUpgradeCell.upgradeTurnCount == 2)
                 {
                     unitInUpgradeCell.Upgrade();
