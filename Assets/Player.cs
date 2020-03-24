@@ -18,8 +18,13 @@ public class Player : MonoBehaviour {
 
     public Unit producingUnit;
 
-	// Use this for initialization
-	void Start () {
+    public PlayerColor getColor()
+    {
+        return playerColor;
+    }
+
+    // Use this for initialization
+    void Start () {
         unitList = new List<Unit>();
 		
 	}

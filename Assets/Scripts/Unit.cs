@@ -49,6 +49,36 @@ public class Unit : MonoBehaviour {
 
     }
 
+    public int getHP()
+    {
+        return hp;
+    }
+
+    public int getATK()
+    {
+        return atk;
+    }
+
+    public int getRange()
+    {
+        return range;
+    }
+
+    public int getMoveRange()
+    {
+        return moveRange;
+    }
+
+    public PlayerColor getPlayer()
+    {
+        return player.getColor();
+    }
+
+    public UnitType getType()
+    {
+        return unitType;
+    }
+
     public void SetPlayer(Player player)
     {
         this.player = player;
