@@ -27,12 +27,14 @@ public class HexGrid : MonoBehaviour
     public int index;
     public HexCell cellAtIndex;
 
+    public List<HexCell> objectiveCells;
+
     void Awake()
     {
         gridCanvas = GetComponentInChildren<Canvas>();
         hexMesh = GetComponentInChildren<HexMesh>();
         cells = new HexCell[height * width];
-
+        objectiveCells = new List<HexCell>();
         //for (int z = 0, i = 0; z < height; z++)
         //{
         //    for (int x = 0; x < width; x++)
@@ -182,6 +184,8 @@ public class HexGrid : MonoBehaviour
             {
                 cell.color = objColor;
                 cell.defaultColor = objColor;
+                objectiveCells.Add(cell);
+                cell.isObjectiveZone = true;
             }
         }
         if (z == 5 | z == 7)
