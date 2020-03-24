@@ -361,8 +361,8 @@ public class GameManagerScript : MonoBehaviour
                 currentPlayer.unitList.Add(unit);
                 currentPlayer.production -= unit.productionCost;
                 producedUnit.Add(unit);
-                var list = new List<Unit> { unit };
-                InfoText(list);
+                var unitlist = new List<Unit> { unit };
+                InfoText(unitlist);
             } else if (currentPlayer.production > 0) {
                 GameObject newUnitObj = Instantiate(selectedUnitPrefab);
                 newUnitObj.transform.position = clickedCell.transform.position + new Vector3(0, 0.1f, 0);
