@@ -26,6 +26,46 @@ public class Player : MonoBehaviour {
 
     public void UnitsAction(Phase phase)
     {
-        
+        if (phase == Phase.Deploy)
+        {
+            foreach (Unit u in unitList)
+            {
+                u.SetHexCell(u.choosenTargetCell);
+                u.choosenTargetCell = null;
+            }
+        }
+        if (phase == Phase.Move)
+        {
+            foreach(Unit u in unitList)
+            {
+                u.SetHexCell(u.choosenTargetCell);
+                u.choosenTargetCell = null;
+            }
+        }
+        if (phase == Phase.Action)
+        {
+            foreach (Unit myUnit in unitList)
+            {
+
+                foreach (Unit unitInTargetCell in myUnit.choosenTargetCell.unitList) {
+                    if(unitInTargetCell.player != this)
+                    {
+                        unitInTargetCell.TakeDamage(myUnit.atk);
+                    }
+                }
+                myUnit.choosenTargetCell = null;
+            }
+        }
+    }
+
+    public void DestroyDeadUnits()
+    {
+        foreach(Unit u in unitList)
+        {
+            if(u.hp <= 0)
+            {
+                Destroy(u.gameObject);
+            }
+        }
     }
 }
