@@ -37,29 +37,38 @@ public class Player : MonoBehaviour {
         {
             foreach (Unit u in unitList)
             {
-                u.MoveToHexCell(u.choosenTargetCell);
-                u.choosenTargetCell = null;
+                if (u.choosenTargetCell)
+                {
+                    u.MoveToHexCell(u.choosenTargetCell);
+                    u.choosenTargetCell = null;
+                }
             }
         }
         if (phase == Phase.Move)
         {
             foreach(Unit u in unitList)
             {
-                u.MoveToHexCell(u.choosenTargetCell);
-                u.choosenTargetCell = null;
+                if (u.choosenTargetCell) { 
+                    u.MoveToHexCell(u.choosenTargetCell);
+                    u.choosenTargetCell = null;
+                }
             }
         }
         if (phase == Phase.Action)
         {
             foreach (Unit myUnit in unitList)
             {
-                foreach (Unit unitInTargetCell in myUnit.choosenTargetCell.unitList) {
-                    if(unitInTargetCell.player != this)
+                if (myUnit.choosenTargetCell)
+                {
+                    foreach (Unit unitInTargetCell in myUnit.choosenTargetCell.unitList)
                     {
-                        unitInTargetCell.TakeDamage(myUnit.atk);
+                        if (unitInTargetCell.player != this)
+                        {
+                            unitInTargetCell.TakeDamage(myUnit.atk);
+                        }
                     }
+                    myUnit.choosenTargetCell = null;
                 }
-                myUnit.choosenTargetCell = null;
             }
         }
     }
