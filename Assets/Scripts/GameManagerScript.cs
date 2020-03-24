@@ -361,7 +361,7 @@ public class GameManagerScript : MonoBehaviour
                 currentPlayer.unitList.Add(unit);
                 currentPlayer.production -= unit.productionCost;
                 producedUnit.Add(unit);
-                InfoText(unit);
+                //InfoText(unit);
             } else if (currentPlayer.production > 0) {
                 GameObject newUnitObj = Instantiate(selectedUnitPrefab);
                 newUnitObj.transform.position = clickedCell.transform.position + new Vector3(0, 0.1f, 0);
@@ -407,7 +407,7 @@ public class GameManagerScript : MonoBehaviour
         List<Unit> unitList = clickedCell.unitList;
         foreach (Unit u in unitList)
         {
-            InfoText(u);
+            InfoText(unitList);
             if (u.player == currentPlayer && u.choosenTargetCell == null)
             {
                 hexGrid.ResetColor();
@@ -492,7 +492,7 @@ public class GameManagerScript : MonoBehaviour
             List<Unit> unitList = clickedCell.unitList;
             foreach (Unit u in unitList)
             {
-                InfoText(u);
+                InfoText(unitList);
                 if (u.player == currentPlayer && u.choosenTargetCell == null)
                 {
                     selectingUnitInBoard = u;
@@ -545,7 +545,7 @@ public class GameManagerScript : MonoBehaviour
         {
             if (u.player != currentPlayer)
             {
-                InfoText(u);
+                InfoText(cell.unitList);
                 return true;
             }
         }
