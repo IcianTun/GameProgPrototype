@@ -18,16 +18,18 @@ public class HexGrid : MonoBehaviour
     Color redColor = Color.red;
     Color greyColor = Color.grey;
     Color objColor = Color.green;
-
+    public Color upgradeColor;
     HexCell[] cells;
 
     Canvas gridCanvas;
     HexMesh hexMesh;
 
+    [Header("For Debugging/Testing code")]
     public int index;
     public HexCell cellAtIndex;
 
     public List<HexCell> objectiveCells;
+    public List<HexCell> upgradeCells;
 
     void Awake()
     {
@@ -104,6 +106,11 @@ public class HexGrid : MonoBehaviour
         {
             if (cell)
                 cell.color = cell.defaultColor;
+        }
+        foreach(HexCell upgradeCell in upgradeCells)
+        {
+            if (upgradeCell.isUpgradeCell)
+                upgradeCell.color = upgradeColor;
         }
         RenderCell();
     }
@@ -194,6 +201,10 @@ public class HexGrid : MonoBehaviour
                 objectiveCells.Add(cell);
                 cell.isObjectiveZone = true;
             }
+            if(x == 0 || x == 8)
+            {
+                upgradeCells.Add(cell);
+            }
         }
         if (z == 5 | z == 7)
         {
@@ -205,6 +216,7 @@ public class HexGrid : MonoBehaviour
                 cell.isObjectiveZone = true;
             }
         }
+        
 
 
         Text label = Instantiate<Text>(cellLabelPrefab);

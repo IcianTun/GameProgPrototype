@@ -24,7 +24,9 @@ public class Unit : MonoBehaviour {
     public int range;
     public int moveRange;
 
-    [Header("For show ")]
+    public int upgradeTurnCount = 0;
+
+    [Header("For show")]
     public int hp;
     public HexCell choosenTargetCell;
     public bool isUpgraded = false;
@@ -61,6 +63,10 @@ public class Unit : MonoBehaviour {
 
     }
 
+    public void Upgrade()
+    {
+
+    }
 
 
 }
