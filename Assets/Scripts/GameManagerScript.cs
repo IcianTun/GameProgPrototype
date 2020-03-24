@@ -237,6 +237,7 @@ public class GameManagerScript : MonoBehaviour
                 bluePlayer.production -= bluePlayer.productionNeeded;
                 bluePlayer.productionNeeded = 0;
                 bluePlayer.producingUnit.MoveToHexCell(bluePlayer.producingUnit.choosenTargetCell);
+                bluePlayer.unitList.Add(bluePlayer.producingUnit);
                 bluePlayer.producingUnit.choosenTargetCell = null;
                 //bluePlayer.unitList.Add(bluePlayer.producingUnit);
                 bluePlayer.producingUnit = null;
@@ -249,6 +250,7 @@ public class GameManagerScript : MonoBehaviour
                 redPlayer.production -= redPlayer.productionNeeded;
                 redPlayer.productionNeeded = 0;
                 redPlayer.producingUnit.MoveToHexCell(redPlayer.producingUnit.choosenTargetCell);
+                redPlayer.unitList.Add(redPlayer.producingUnit);
                 redPlayer.producingUnit.choosenTargetCell = null;
                 //redPlayer.unitList.Add(redPlayer.producingUnit);
                 redPlayer.producingUnit = null;
