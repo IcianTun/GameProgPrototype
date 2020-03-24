@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public enum Phase
@@ -28,8 +29,10 @@ public class GameManagerScript : MonoBehaviour
     public Text currentPlayerText;
     public Text phaseText;
     public Text UnitInfoText;
+    public Text UnitInfoText2;
     public Text gain;
     public GameObject blackCover;
+    public Text victoryInfoText;
 
     [Header("GameInfo")]
     public Phase phase;
@@ -39,6 +42,7 @@ public class GameManagerScript : MonoBehaviour
     static int productionGain = 2;   // gain start at 2
     static int productionMax = 6;
     public Player currentWinningPlayer;
+    public int victoryCount;
 
     [Header("Game Setup")]
     public Player bluePlayer;
@@ -52,6 +56,7 @@ public class GameManagerScript : MonoBehaviour
     public Unit selectingUnitInBoard;
 
     public List<Unit> producedUnit;
+    
 
     private void Awake()
     {
@@ -65,16 +70,64 @@ public class GameManagerScript : MonoBehaviour
         }
     }
 
+    void Update()
+    {
+        if (!EventSystem.current.IsPointerOverGameObject())
+        {
+            Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(inputRay, out hit))
+            {
+                HexCell hoveringCell = hexGrid.GetCell(hit.point);
+                InfoText(hoveringCell.unitList);
+            }
+
+        }
+    }
+
     private void GainText()
     {
         gain.text = "Production Rate = " + productionGain; //TODO
     }
 
-    private void InfoText(Unit unit)
+    private void InfoText(List<Unit> unitList)
     {
-        UnitInfoText.text = "Owner : " + unit.player + "\nType : " + unit.unitType.ToString() + "\nHP : "
-            + unit.hp.ToString() + "\nATK : " + unit.atk + "\nRange : " +
-            unit.range.ToString() + "\nMove : " + unit.moveRange;
+        UnitInfoText.text = "";
+        UnitInfoText2.text = "";
+        int i = unitList.Count;
+        if (i > 0)
+        {
+            Unit unit = unitList[0];
+            switch (unit.player.playerColor)
+            {
+                case (PlayerColor.Blue):
+                    UnitInfoText.color = Color.blue;
+                    break;
+                case (PlayerColor.Red):
+                    UnitInfoText.color = Color.red;
+                    break;
+            }
+            UnitInfoText.text = unit.unitType.ToString() + (unit.isUpgraded ? "(U)" : "") + "\nHP : "
+                + unit.hp.ToString() + "\nATK : " + unit.atk + "\nRange : " +
+                unit.range.ToString() + "\tMove : " + unit.moveRange;
+        }
+        if (i > 1)
+        {
+            Unit unit2 = unitList[1];
+            switch (unit2.player.playerColor)
+            {
+                case (PlayerColor.Blue):
+                    UnitInfoText2.color = Color.blue;
+                    break;
+                case (PlayerColor.Red):
+                    UnitInfoText2.color = Color.red;
+                    break;
+            }
+            UnitInfoText2.text = unit2.unitType.ToString() + (unit2.isUpgraded? "(U)" : "") + "\nHP : "
+                + unit2.hp.ToString() + "\nATK : " + unit2.atk + "\nRange : " +
+                unit2.range.ToString() + "\tMove : " + unit2.moveRange;
+        }
+
     }
 
     private void InfoClearText()
@@ -98,11 +151,6 @@ public class GameManagerScript : MonoBehaviour
         nextPlayerButton.onClick.AddListener(() => DisableBlackScreen());
 
         producedUnit = new List<Unit>();
-    }
-
-    private void Update()
-    {
-
     }
 
     public void EndStep()
@@ -224,10 +272,43 @@ public class GameManagerScript : MonoBehaviour
                 if (u.player == redPlayer) isThereRedUnit = true;
             }
         }
-        if(isThereBlueUnit && !isThereRedUnit)
+
+        if (isThereBlueUnit && !isThereRedUnit)
         {
-            currentWinningPlayer = bluePlayer;
+            if(currentWinningPlayer == bluePlayer)
+            {
+                victoryCount += 1;
+            } else
+            {
+                victoryCount = 1;
+                currentWinningPlayer = bluePlayer;
+            }
         }
+        if (!isThereBlueUnit && isThereRedUnit)
+        {
+            if (currentWinningPlayer == redPlayer)
+            {
+                victoryCount += 1;
+            }
+            else
+            {
+                victoryCount = 1;
+                currentWinningPlayer = redPlayer;
+            }
+        }
+        if (!isThereBlueUnit && !isThereRedUnit)
+        {
+            victoryCount = 0;
+        }
+        if(victoryCount == 3)
+        {
+            ShowGameWin();
+        }
+    }
+
+    void ShowGameWin()
+    {
+
     }
 
     public void SetDeployUnit(UnitType unitType)

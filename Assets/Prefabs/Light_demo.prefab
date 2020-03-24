@@ -53,7 +53,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hexCell: {fileID: 0}
-  unitType: 0
+  unitType: 1
   player: {fileID: 0}
   maxHP: 4
   productionCost: 2

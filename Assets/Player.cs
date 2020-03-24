@@ -75,13 +75,16 @@ public class Player : MonoBehaviour {
 
     public void DestroyDeadUnits()
     {
-        foreach(Unit u in unitList)
+        for(int i = unitList.Count-1; i>= 0; i--)
         {
-            if(u.hp <= 0)
+            if(unitList[i].hp <= 0)
             {
-                u.hexCell.unitList.Remove(u);
-                Destroy(u.gameObject);
+                unitList[i].hexCell.unitList.Remove(unitList[i]);
+                Destroy(unitList[i].gameObject);
+                unitList.Remove(unitList[i]);
             }
         }
+
+
     }
 }
