@@ -65,7 +65,31 @@ public class Unit : MonoBehaviour {
 
     public void Upgrade()
     {
-
+        // change stats
+        if (unitType == UnitType.Tank)
+        {
+            maxHP = 8;
+            atk = 4;
+            range = 1;
+            moveRange = 1;
+        }
+        if (unitType == UnitType.Light)
+        {
+            maxHP = 6;
+            atk = 4;
+            range = 1;
+            moveRange = 3;
+        }
+        if (unitType == UnitType.Ranger)
+        {
+            maxHP = 6;
+            atk = 4;
+            range = 3;
+            moveRange = 1;
+        }
+        // fully heal
+        hp = maxHP;
+        isUpgraded = true;
     }
 
 
