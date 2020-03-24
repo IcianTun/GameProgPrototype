@@ -837,7 +837,8 @@ MonoBehaviour:
   nextPlayerButton: {fileID: 1713338175}
   currentPlayerText: {fileID: 834389975}
   phaseText: {fileID: 1031636906}
-  unitInfoText: {fileID: 0}
+  UnitInfoText: {fileID: 0}
+  gain: {fileID: 0}
   blackCover: {fileID: 1573342158}
   phase: 0
   currentPlayer: {fileID: 0}
@@ -850,6 +851,7 @@ MonoBehaviour:
   rangerPrefab: {fileID: 1913352262964362, guid: df8ceaff0451510428b56c6e039aa9cd,
     type: 2}
   selectingUnitInBoard: {fileID: 0}
+  producedUnit: []
 --- !u!1 &992233202
 GameObject:
   m_ObjectHideFlags: 0
@@ -1045,7 +1047,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1102,6 +1104,7 @@ MonoBehaviour:
   playerColor: 1
   unitList: []
   production: 8
+  productionNeeded: 0
   producingUnit: {fileID: 0}
 --- !u!4 &1168422921
 Transform:
@@ -1973,6 +1976,7 @@ MonoBehaviour:
   playerColor: 0
   unitList: []
   production: 8
+  productionNeeded: 0
   producingUnit: {fileID: 0}
 --- !u!4 &1971140502
 Transform:

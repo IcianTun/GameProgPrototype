@@ -80,7 +80,6 @@ public class HexGrid : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(inputRay, out hit))
         {
-            //Debug.Log(hit.collider.gameObject);
             TouchCell(hit.point);
         }
     }

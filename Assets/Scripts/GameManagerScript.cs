@@ -50,7 +50,7 @@ public class GameManagerScript : MonoBehaviour
 
     public Unit selectingUnitInBoard;
 
-    List<Unit> producedUnit;
+    public List<Unit> producedUnit;
 
     private void Awake()
     {
@@ -143,6 +143,15 @@ public class GameManagerScript : MonoBehaviour
 
     void SwitchPlayerColor()
     {
+        if (phase == Phase.Deploy)
+        {
+            HideDeployedUnit();
+            selectedUnitPrefab = null;
+        }
+        else
+        {
+            hexGrid.ResetColor();
+        }
         switch (currentPlayer.playerColor)
         {
             case (PlayerColor.Blue):
@@ -155,14 +164,6 @@ public class GameManagerScript : MonoBehaviour
                 currentPlayerText.text = "CurrentPlayer: Blue";
                 currentPlayer = bluePlayer;
                 break;
-        }
-        if (phase == Phase.Deploy)
-        {
-            HideDeployedUnit();
-            selectedUnitPrefab = null;
-        } else
-        {
-            hexGrid.ResetColor();
         }
 
     }
@@ -235,7 +236,7 @@ public class GameManagerScript : MonoBehaviour
 
     void HandleDeployPhase(HexCell clickedCell)
     {
-        if (IsDeployZone(clickedCell) && selectedUnitPrefab && (!AlreadyDeployThere(clickedCell)))
+        if (IsDeployZone(clickedCell) && selectedUnitPrefab && (!AlreadyDeployThere(clickedCell)) && !(IsMyUnitThere(clickedCell) ))
         {
             if (currentPlayer.production >= selectedUnitPrefab.GetComponent<Unit>().productionCost)
             {
@@ -265,7 +266,6 @@ public class GameManagerScript : MonoBehaviour
     }
     void HideDeployedUnit()
     {
-        Debug.Log("Hide!");
         foreach (Unit u in producedUnit)
         {
             u.transform.position = u.choosenTargetCell.transform.position + new Vector3(0, -0.1f, 0);
@@ -296,7 +296,7 @@ public class GameManagerScript : MonoBehaviour
         {
             if (u.player == currentPlayer && u.choosenTargetCell == null)
             {
-                Debug.Log("clickedUnit");
+                hexGrid.ResetColor();
                 selectingUnitInBoard = u;
                 HexCell[] neighbors = clickedCell.GetNeightbors();
                 List<HexCell> neightborsList = new List<HexCell>(neighbors);
