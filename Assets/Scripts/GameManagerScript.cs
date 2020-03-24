@@ -38,7 +38,7 @@ public class GameManagerScript : MonoBehaviour
 
     static int productionGain = 2;   // gain start at 2
     static int productionMax = 6;
-
+    public Player currentWinningPlayer;
 
     [Header("Game Setup")]
     public Player bluePlayer;
@@ -108,7 +108,7 @@ public class GameManagerScript : MonoBehaviour
 
     public void DisableBlackScreen()
     {
-        if (currentPlayer.playerColor == PlayerColor.Red) // red is 2nd player
+        if (currentPlayer.playerColor == PlayerColor.Red) // red is 2nd player this is telling that we are ending phase
         {
             SwitchPlayerColor();
             MergeAction();
@@ -202,8 +202,26 @@ public class GameManagerScript : MonoBehaviour
                 redPlayer.producingUnit = null;
             }
         }
-
+        HandleObjective();
         turnCount += 1;
+    }
+
+    void HandleObjective()
+    {
+        bool isThereBlueUnit = false;
+        bool isThereRedUnit = false;
+        foreach(HexCell objCell in hexGrid.objectiveCells)
+        {
+            foreach(Unit u in objCell.unitList)
+            {
+                if (u.player == bluePlayer) isThereBlueUnit = true;
+                if (u.player == redPlayer) isThereRedUnit = true;
+            }
+        }
+        if(isThereBlueUnit && !isThereRedUnit)
+        {
+            currentWinningPlayer = bluePlayer;
+        }
     }
 
     public void SetDeployUnit(UnitType unitType)
@@ -454,5 +472,7 @@ public class GameManagerScript : MonoBehaviour
         }
         return false;
     }
+
+
 
 }

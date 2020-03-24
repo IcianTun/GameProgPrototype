@@ -27,6 +27,8 @@ public class HexCell : MonoBehaviour {
 
     public List<Unit> unitList;
 
+    public bool isObjectiveZone = false;
+
     void Start()
     {
         unitList = new List<Unit>();
