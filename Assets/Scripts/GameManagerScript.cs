@@ -77,6 +77,10 @@ public class GameManagerScript : MonoBehaviour
             unit.range.ToString() + "\nMove : " + unit.moveRange;
     }
 
+    private void InfoClearText()
+    {
+        UnitInfoText.text = "";
+    }
 
     void Start()
     {
@@ -111,11 +115,13 @@ public class GameManagerScript : MonoBehaviour
         if (currentPlayer.playerColor == PlayerColor.Red) // red is 2nd player this is telling that we are ending phase
         {
             SwitchPlayerColor();
+            InfoClearText();
             MergeAction();
             SwitchPhase();
         } else
         {
             SwitchPlayerColor();
+            InfoClearText();
         }
         blackCover.SetActive(false);
     }
@@ -274,6 +280,7 @@ public class GameManagerScript : MonoBehaviour
                 currentPlayer.unitList.Add(unit);
                 currentPlayer.production -= unit.productionCost;
                 producedUnit.Add(unit);
+                InfoText(unit);
             } else if (currentPlayer.production > 0) {
                 GameObject newUnitObj = Instantiate(selectedUnitPrefab);
                 newUnitObj.transform.position = clickedCell.transform.position + new Vector3(0, 0.1f, 0);
@@ -319,6 +326,7 @@ public class GameManagerScript : MonoBehaviour
         List<Unit> unitList = clickedCell.unitList;
         foreach (Unit u in unitList)
         {
+            InfoText(u);
             if (u.player == currentPlayer && u.choosenTargetCell == null)
             {
                 hexGrid.ResetColor();
@@ -403,6 +411,7 @@ public class GameManagerScript : MonoBehaviour
             List<Unit> unitList = clickedCell.unitList;
             foreach (Unit u in unitList)
             {
+                InfoText(u);
                 if (u.player == currentPlayer && u.choosenTargetCell == null)
                 {
                     selectingUnitInBoard = u;
@@ -455,6 +464,7 @@ public class GameManagerScript : MonoBehaviour
         {
             if (u.player != currentPlayer)
             {
+                InfoText(u);
                 return true;
             }
         }
