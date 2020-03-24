@@ -297,6 +297,25 @@ public class GameManagerScript : MonoBehaviour
         HandleUpgrade();
         HandleObjective();
         turnCount += 1;
+        HandleSkillTurnCount();
+    }
+
+    void HandleSkillTurnCount()
+    {
+        foreach(Unit unit in bluePlayer.unitList)
+        {
+            if (unit.unitType == UnitType.Light && unit.isUpgraded)
+            {
+                unit.dodgeTurnCount++;
+            }
+        }
+        foreach (Unit unit in redPlayer.unitList)
+        {
+            if (unit.unitType == UnitType.Light && unit.isUpgraded)
+            {
+                unit.dodgeTurnCount++;
+            }
+        }
     }
 
     void HandleUpgrade()
@@ -311,6 +330,7 @@ public class GameManagerScript : MonoBehaviour
             if(upgradeCell.isUpgradeCell && upgradeCell.unitList.Count == 1)
             {
                 Unit unitInUpgradeCell = upgradeCell.unitList[0];
+                unitInUpgradeCell.upgradeTurnCount++;
                 if (unitInUpgradeCell.upgradeTurnCount == 2)
                 {
                     unitInUpgradeCell.Upgrade();
