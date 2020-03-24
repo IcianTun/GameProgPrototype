@@ -163,41 +163,53 @@ public class GameManagerScript : MonoBehaviour
         }
     }
 
-    public void HandleOnClickCell(HexCell cell)
+    public void HandleOnClickCell(HexCell clickedCell)
     {
         if (phase == Phase.Deploy)
         {
-            if (IsDeployZone(cell) && selectedUnitPrefab && (cell.unitList.Count == 0) && currentPlayer.production >= selectedUnitPrefab.GetComponent<Unit>().productionCost)
-            {
-                GameObject newUnit = Instantiate(selectedUnitPrefab);
-                Unit unit = newUnit.GetComponent<Unit>();
-                cell.unitList.Add(unit);
-                unit.SetHexCell(cell);
-                unit.SetPlayer(currentPlayer);  // TODO add to choosenCoordinate approach
-                currentPlayer.unitList.Add(unit);
-                currentPlayer.production -= unit.productionCost;
-            }
+            HandleDeployPhase(clickedCell);
         }
         if (phase == Phase.Move)
         {
-            HandleMovePhase(cell);
+            HandleMovePhase(clickedCell);
         }
         if (phase == Phase.Action)
         {
-            HandleActionPhase(cell);
+            HandleActionPhase(clickedCell);
         }
     }
 
-    public void HandleMovePhase(HexCell cell)
+    void HandleDeployPhase(HexCell clickedCell)
+    {
+        if (IsDeployZone(clickedCell) && selectedUnitPrefab && (clickedCell.unitList.Count == 0) )
+        {
+            if (currentPlayer.production >= selectedUnitPrefab.GetComponent<Unit>().productionCost)
+            {
+                GameObject newUnit = Instantiate(selectedUnitPrefab);
+                Unit unit = newUnit.GetComponent<Unit>();
+                clickedCell.unitList.Add(unit);
+                //unit.SetHexCell(clickedCell);
+                unit.SetPlayer(currentPlayer);                  // TODO add to choosenCoordinate approach
+                currentPlayer.unitList.Add(unit);
+                currentPlayer.production -= unit.productionCost;
+            } else if(currentPlayer.production > 0){
+                // Produce this unit next turn
+                // currentPlayer.producingUnit = ;
+            }
+
+        }
+    }
+
+    void HandleMovePhase(HexCell clickedCell)
     {
 
-        List<Unit> unitList = cell.unitList;
+        List<Unit> unitList = clickedCell.unitList;
         foreach (Unit u in unitList)
         {
             if(u.player == currentPlayer && u.choosenTargetCell == null)
             {
                 selectingUnitInBoard = u;
-                HexCell[] neighbors = cell.GetNeightbors();
+                HexCell[] neighbors = clickedCell.GetNeightbors();
                 List<HexCell> neightborsList = new List<HexCell>(neighbors);
                 int range = 1;
                 while (range <= u.moveRange)
@@ -216,9 +228,7 @@ public class GameManagerScript : MonoBehaviour
                     range++;
                 }
             }
-
         }
-
         /*
         if (cell.unit && cell.unit.player == currentPlayer && selectingUnitInBoard != cell.unit && cell.unit.choosenTargetCell == null)
         {
@@ -228,10 +238,10 @@ public class GameManagerScript : MonoBehaviour
         if (selectingUnitInBoard)       // Mode select destination
         {
 
-            int distance = selectingUnitInBoard.hexCell.coordinates - cell.coordinates;
-            if (distance > 0 && distance <= selectingUnitInBoard.moveRange && CanMoveThere(cell))
+            int distance = selectingUnitInBoard.hexCell.coordinates - clickedCell.coordinates;
+            if (distance > 0 && distance <= selectingUnitInBoard.moveRange && CanMoveThere(clickedCell))
             {
-                selectingUnitInBoard.choosenTargetCell = cell;
+                selectingUnitInBoard.choosenTargetCell = clickedCell;
                 hexGrid.ResetColor();
                 selectingUnitInBoard = null;
             }
@@ -255,10 +265,52 @@ public class GameManagerScript : MonoBehaviour
     {
         bluePlayer.UnitsAction(phase);
         redPlayer.UnitsAction(phase);
+        if(phase == Phase.Action)
+        {
+            bluePlayer.DestroyDeadUnits();
+            redPlayer.DestroyDeadUnits();
+        }
     }
 
-    public void HandleActionPhase(HexCell cell)
+    public void HandleActionPhase(HexCell clickedCell)
     {
+        List<Unit> unitList = clickedCell.unitList;
+        foreach (Unit u in unitList)
+        {
+            if (u.player == currentPlayer && u.choosenTargetCell == null)
+            {
+                selectingUnitInBoard = u;
+                HexCell[] neighbors = clickedCell.GetNeightbors();
+                List<HexCell> neightborsList = new List<HexCell>(neighbors);
+                int range = 1;
+                while (range <= u.moveRange)
+                {
+                    List<HexCell> newList = new List<HexCell>();
+                    foreach (HexCell neighbor in neightborsList)
+                    {
+                        if (neighbor && CanMoveThere(neighbor))
+                        {
+                            newList.AddRange(neighbor.GetNeightbors());
+                            neighbor.color = rangeColor;
+                            hexGrid.RenderCell();
+                        }
+                    }
+                    neightborsList = newList;
+                    range++;
+                }
+            }
+        }
+        if (selectingUnitInBoard)       // Mode select target
+        {
+
+            int distance = selectingUnitInBoard.hexCell.coordinates - clickedCell.coordinates;
+            if (distance > 0 && distance <= selectingUnitInBoard.range && CanMoveThere(clickedCell) && IsEnemyUnitThere(clickedCell))
+            {
+                selectingUnitInBoard.choosenTargetCell = clickedCell;
+                hexGrid.ResetColor();
+                selectingUnitInBoard = null;
+            }
+        }
 
     }
 
@@ -275,4 +327,17 @@ public class GameManagerScript : MonoBehaviour
         }
         return isInDeployZone;
     }
+
+    bool IsEnemyUnitThere(HexCell cell)
+    {
+        foreach(Unit u in cell.unitList)
+        {
+            if (u.player != currentPlayer)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
