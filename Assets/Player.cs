@@ -66,6 +66,10 @@ public class Player : MonoBehaviour {
                         {
                             unitInTargetCell.TakeDamage(myUnit.atk);
                         }
+                        if(myUnit.unitType == UnitType.Ranger && myUnit.isUpgraded)
+                        {
+                            unitInTargetCell.isBinded = true;
+                        }
                     }
                     myUnit.choosenTargetCell = null;
                 }

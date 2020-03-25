@@ -26,6 +26,7 @@ public class Unit : MonoBehaviour {
 
     public int upgradeTurnCount = 0;
     public int dodgeTurnCount = 0;
+    public bool isBinded = false;
 
     [Header("For show")]
     public int hp;

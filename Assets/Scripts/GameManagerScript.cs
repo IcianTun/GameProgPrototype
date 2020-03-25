@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public enum Phase
@@ -34,6 +35,9 @@ public class GameManagerScript : MonoBehaviour
     public GameObject blackCover;
     public Text victoryInfoText;
     public Text TurnCountText;
+    public GameObject endGameCover;
+    public Text winText;
+    public Button restartGameButton;
 
     [Header("GameInfo")]
     public Phase phase;
@@ -137,9 +141,10 @@ public class GameManagerScript : MonoBehaviour
                     UnitInfoText.color = Color.red;
                     break;
             }
-            UnitInfoText.text = unit.unitType.ToString() + (unit.isUpgraded ? "(U)" : "") + "\nHP : "
+            string star = (unit.player == currentPlayer && !unit.choosenTargetCell ? "*" : " ");
+            UnitInfoText.text = star+unit.unitType.ToString() + (unit.isUpgraded ? "(U)" : "") + "\nHP : "
                 + unit.hp.ToString() + "\nATK : " + unit.atk + "\nRange : " +
-                unit.range.ToString() + "\tMove : " + unit.moveRange;
+                unit.range.ToString() + "   Move : " + unit.moveRange;
         }
         if (i > 1)
         {
@@ -153,9 +158,10 @@ public class GameManagerScript : MonoBehaviour
                     UnitInfoText2.color = Color.red;
                     break;
             }
-            UnitInfoText2.text = unit2.unitType.ToString() + (unit2.isUpgraded? "(U)" : "") + "\nHP : "
+            string star2 = (unit2.player == currentPlayer && !unit2.choosenTargetCell ? "*" : " ");
+            UnitInfoText2.text = star2+unit2.unitType.ToString() + (unit2.isUpgraded? "(U)" : "") + "\nHP : "
                 + unit2.hp.ToString() + "\nATK : " + unit2.atk + "\nRange : " +
-                unit2.range.ToString() + "\tMove : " + unit2.moveRange;
+                unit2.range.ToString() + "   Move : " + unit2.moveRange;
         }
 
     }
@@ -181,7 +187,7 @@ public class GameManagerScript : MonoBehaviour
         rangerButton.onClick.AddListener(() => SetDeployUnit(UnitType.Ranger));
         endStepButton.onClick.AddListener(() => EndStep());
         nextPlayerButton.onClick.AddListener(() => DisableBlackScreen());
-
+        restartGameButton.onClick.AddListener(() => RestartGame());
         producedUnit = new List<Unit>();
     }
 
@@ -298,6 +304,7 @@ public class GameManagerScript : MonoBehaviour
         HandleObjective();
         turnCount += 1;
         HandleSkillTurnCount();
+        hexGrid.ResetColor();
     }
 
     void HandleSkillTurnCount()
@@ -308,12 +315,20 @@ public class GameManagerScript : MonoBehaviour
             {
                 unit.dodgeTurnCount++;
             }
+            if (unit.isBinded)
+            {
+                unit.isBinded = false;
+            }
         }
         foreach (Unit unit in redPlayer.unitList)
         {
             if (unit.unitType == UnitType.Light && unit.isUpgraded)
             {
                 unit.dodgeTurnCount++;
+            }
+            if (unit.isBinded)
+            {
+                unit.isBinded = false;
             }
         }
     }
@@ -399,7 +414,23 @@ public class GameManagerScript : MonoBehaviour
 
     void ShowGameWin()
     {
+        switch (currentWinningPlayer.playerColor)
+        {
+            case (PlayerColor.Blue):
+                winText.color = Color.blue;
+                winText.text = "Blue Player Win!";
+                break;
+            case (PlayerColor.Red):
+                winText.color = Color.red;
+                winText.text = "Red Player Win!";
+                break;
+        }
+        endGameCover.SetActive(true);
+    }
 
+    void RestartGame()
+    {
+        SceneManager.LoadScene("TunScene");
     }
 
     public void SetDeployUnit(UnitType unitType)
@@ -618,11 +649,19 @@ public class GameManagerScript : MonoBehaviour
                         List<HexCell> newList = new List<HexCell>();
                         foreach (HexCell neighbor in neightborsList)
                         {
-                            newList.AddRange(neighbor.GetNeightbors());
-                            if (IsEnemyUnitThere(neighbor))
+                            if (neighbor)
                             {
-                                neighbor.color = enemyFoundColor;
+                                foreach (HexCell neighborOfNeighbor in neighbor.GetNeightbors())
+                                {
+                                    if (neighborOfNeighbor)
+                                        newList.Add(neighborOfNeighbor);
+                                }
+                                if (IsEnemyUnitThere(neighbor))
+                                {
+                                    neighbor.color = enemyFoundColor;
+                                }
                             }
+
                         }
                         neightborsList = newList;
                         r++;
